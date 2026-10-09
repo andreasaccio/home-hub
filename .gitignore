@@ -1,0 +1,18 @@
+# archivi e report: restano fuori dal repo
+*.gpg
+*.tar.gz
+homehub-backup-*
+homehub-recon-*.txt
+*.manifest.txt
+
+# segreti
+secrets/
+*.key
+*.pem
+*.ovpn
+.env
+
+# editor
+.vscode/
+*.swp
+*~

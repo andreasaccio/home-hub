@@ -1,0 +1,9 @@
+* text=auto eol=lf
+*.sh text eol=lf
+*.things text eol=lf
+*.items text eol=lf
+*.persist text eol=lf
+*.cfg text eol=lf
+*.png binary
+*.jpg binary
+*.gpg binary
