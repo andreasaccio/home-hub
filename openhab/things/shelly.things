@@ -3,6 +3,11 @@
 // Gli ID (ultima parte dell'UID) sono quelli che il binding usa in discovery,
 // cosi' gli stessi dispositivi non ricompaiono nell'inbox.
 
-Thing shelly:shelly1:2c879c       "Shelly 1 - Clima sala"  [ deviceIp="192.168.133.9" ]
-Thing shelly:shelly1:2c070c       "Shelly 1 - 2c070c"      [ deviceIp="192.168.133.10" ]
-Thing shelly:shellyem:bcff4dfd0512 "Shelly EM"             [ deviceIp="192.168.133.203" ]
+// .9   - clima della sala
+Thing shelly:shelly1:2c879c        "Shelly 1 - Clima sala"   [ deviceIp="192.168.133.9" ]
+
+// .10  - caldaia: ingresso pilotato dal termostato tado, rele' che comanda la caldaia
+Thing shelly:shelly1:2c070c        "Shelly 1 - Caldaia"      [ deviceIp="192.168.133.10" ]
+
+// .203 - misura all'uscita del contatore Enel (in uso solo la pinza 1)
+Thing shelly:shellyem:bcff4dfd0512 "Shelly EM - Rete Enel"   [ deviceIp="192.168.133.203" ]

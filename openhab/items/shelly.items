@@ -1,0 +1,31 @@
+// Item degli Shelly di casa - Thing in things/shelly.things
+// I nomi degli Item sono stabili: lo storico rrd4j e' salvato con il nome dell'Item,
+// rinominare un Item significa ripartire con uno storico nuovo.
+// Canali verificati su openHAB 5.2.2 (09/10/2026): si usano i nomi nuovi
+// (currentPower, totalEnergy...), non quelli deprecati (currentWatts, totalKWH...).
+
+Group gShelly  "Shelly"
+Group gStorico "Storicizzati (rrd4j)"
+
+// --- Caldaia (Shelly 1 .10) -------------------------------------------------
+// Ingresso = richiesta di calore del termostato tado; rele' = comando effettivo
+// alla caldaia. Se differiscono, il rele' e' stato forzato a mano.
+Switch   Caldaia_Comando         "Caldaia - comando (relè)"                 <fire>             (gShelly, gStorico) { channel="shelly:shelly1:2c070c:relay#output" }
+Switch   Caldaia_RichiestaTado   "Caldaia - richiesta tado (ingresso)"      <heating>          (gShelly, gStorico) { channel="shelly:shelly1:2c070c:relay#input" }
+Number   Caldaia_WiFi            "Caldaia - Wi-Fi [%d/4]"                   <qualityofservice> (gShelly)           { channel="shelly:shelly1:2c070c:device#wifiSignal" }
+DateTime Caldaia_UltimoContatto  "Caldaia - ultimo contatto [%1$td/%1$tm %1$tH:%1$tM]" <time> (gShelly)           { channel="shelly:shelly1:2c070c:device#heartBeat" }
+
+// --- Clima sala (Shelly 1 .9) -----------------------------------------------
+Switch   ClimaSala_Rele          "Clima sala - relè"                        <switch>           (gShelly, gStorico) { channel="shelly:shelly1:2c879c:relay#output" }
+Switch   ClimaSala_Ingresso      "Clima sala - ingresso"                    <switch>           (gShelly)           { channel="shelly:shelly1:2c879c:relay#input" }
+Number   ClimaSala_WiFi          "Clima sala - Wi-Fi [%d/4]"                <qualityofservice> (gShelly)           { channel="shelly:shelly1:2c879c:device#wifiSignal" }
+DateTime ClimaSala_UltimoContatto "Clima sala - ultimo contatto [%1$td/%1$tm %1$tH:%1$tM]" <time> (gShelly)          { channel="shelly:shelly1:2c879c:device#heartBeat" }
+
+// --- Rete Enel (Shelly EM .203, pinza 1 all'uscita del contatore) -----------
+// La pinza 2 non e' collegata: i canali meter2# non sono usati.
+Number:Power             Rete_Potenza         "Rete Enel - potenza [%.0f W]"               <energy> (gShelly, gStorico) { channel="shelly:shellyem:bcff4dfd0512:meter1#currentPower", unit="W" }
+Number:Energy            Rete_Energia         "Rete Enel - energia prelevata [%.2f kWh]"   <energy> (gShelly, gStorico) { channel="shelly:shellyem:bcff4dfd0512:meter1#totalEnergy", unit="kWh" }
+Number:ElectricPotential Rete_Tensione        "Rete Enel - tensione [%.0f V]"              <energy> (gShelly, gStorico) { channel="shelly:shellyem:bcff4dfd0512:meter1#voltage", unit="V" }
+Number                   Rete_FattorePotenza  "Rete Enel - fattore di potenza [%.2f]"      <energy> (gShelly, gStorico) { channel="shelly:shellyem:bcff4dfd0512:meter1#powerFactor" }
+Number                   ShellyEM_WiFi        "Shelly EM - Wi-Fi [%d/4]"                   <qualityofservice> (gShelly)  { channel="shelly:shellyem:bcff4dfd0512:device#wifiSignal" }
+DateTime                 ShellyEM_UltimoContatto "Shelly EM - ultimo contatto [%1$td/%1$tm %1$tH:%1$tM]" <time> (gShelly) { channel="shelly:shellyem:bcff4dfd0512:device#heartBeat" }

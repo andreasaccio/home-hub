@@ -1,0 +1,13 @@
+// Storico rrd4j: tutti i membri del gruppo gStorico (vedi items/).
+// rrd4j richiede un campione regolare: oltre a ogni variazione si salva
+// anche un valore al minuto. restoreOnStartup ripristina l'ultimo valore
+// al riavvio di openHAB. DateTime e String non si possono storicizzare con rrd4j.
+
+Strategies {
+    everyMinute : "0 * * * * ?"
+    default = everyChange
+}
+
+Items {
+    gStorico* : strategy = everyChange, everyMinute, restoreOnStartup
+}
