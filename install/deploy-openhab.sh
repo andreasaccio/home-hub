@@ -40,7 +40,7 @@ OWNER=openhab:openhab
 [ -d "$SRC" ] || { echo "Cartella $SRC assente" >&2; exit 1; }
 [ -d "$DST" ] || { echo "Cartella $DST assente: openHAB e' installato?" >&2; exit 1; }
 
-RS=(rsync -rtci --chown="$OWNER")
+RS=(rsync -rtci --chown="$OWNER" --temp-dir=/var/tmp --exclude=readme.txt)
 [ "$CHECK" -eq 1 ] && RS+=(--dry-run)
 
 echo "Deploy da $SRC a $DST $([ "$CHECK" -eq 1 ] && echo '(PROVA, nessuna modifica)')"
