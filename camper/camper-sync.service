@@ -1,0 +1,16 @@
+# Copia incrementale di history.db di Camper Hub sul Home Hub.
+# Installato da install/setup-camper-sync.sh in /etc/systemd/system/.
+# Log: journalctl -u camper-sync
+
+[Unit]
+Description=Camper Hub: copia incrementale di history.db
+Wants=network-online.target
+After=network-online.target openvpn@server.service
+
+[Service]
+Type=oneshot
+User=openhabian
+Group=openhabian
+ExecStart=/usr/bin/python3 /home/openhabian/home-hub/camper/camper-sync.py
+Nice=10
+TimeoutStartSec=30min

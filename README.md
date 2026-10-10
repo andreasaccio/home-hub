@@ -16,6 +16,8 @@ Piano e stato dei lavori: documento di progetto `claude/home-hub-piano.md` (prog
 | `install/deploy-openhab.sh` | Copia `openhab/` in `/etc/openhab` sul Pi |
 | `mosquitto/` | Broker MQTT: `homehub.conf` (listener) e `acl` (permessi per utente) |
 | `install/setup-mosquitto.sh` | Installa Mosquitto e copia `mosquitto/` in `/etc/mosquitto`; con `--utente` crea un utente o ne cambia la password |
+| `camper/` | Copia incrementale di `history.db` di Camper Hub: `camper-export.py` e `setup-camper-export.sh` (vanno su LeoRaspy), `camper-sync.py` con `.service` e `.timer` (Home Hub) |
+| `install/setup-camper-sync.sh` | Installa sul Home Hub il timer di `camper-sync` e crea `/var/lib/homehub` |
 | `tools/` | Script di servizio: ricognizione, backup cifrato, ripristino VPN |
 
 ## Flusso di lavoro
@@ -45,6 +47,19 @@ Piano e stato dei lavori: documento di progetto `claude/home-hub-piano.md` (prog
 | 1884 | solo 127.0.0.1 | senza password: openHAB e prove sul Pi |
 
 Prova dal Pi: `mosquitto_sub -h 127.0.0.1 -p 1884 -v -t '#' -W 60`.
+
+## Storico di Camper Hub
+
+- Database locale: `/var/lib/homehub/camper-history.db` (tabelle `samples`, `event_log`, `bds_events`, stesse colonne di LeoRaspy). Non si cancella nulla.
+- `camper-sync.timer` alle 03:17, 09:17, 15:17 e 21:17: chiede a LeoRaspy solo le righe nuove. Se il camper è offline riprova al giro dopo.
+- Accesso: chiave `~/.ssh/camper-export` di openhabian, autorizzata su LeoRaspy per l'utente `homehub-export` solo da 10.8.0.1 e solo per `/usr/local/bin/camper-export`.
+- Comandi:
+  ```bash
+  python3 ~/home-hub/camper/camper-sync.py --info   # stato remoto e locale
+  python3 ~/home-hub/camper/camper-sync.py          # sincronizza subito
+  journalctl -u camper-sync -n 20                   # ultime esecuzioni
+  ```
+- Se cambia `camper-export.py`, va reinstallato su LeoRaspy con `setup-camper-export.sh`.
 
 ## Regole
 

@@ -96,6 +96,8 @@ CANDIDATES=(
   /etc/openhab
   /var/lib/openhab/jsondb /var/lib/openhab/config /var/lib/openhab/etc /var/lib/openhab/secrets
   /etc/mosquitto
+  /var/lib/homehub
+  /etc/systemd/system/camper-sync.service /etc/systemd/system/camper-sync.timer
   /etc/NetworkManager/system-connections
   /etc/ssh
   /etc/samba/smb.conf

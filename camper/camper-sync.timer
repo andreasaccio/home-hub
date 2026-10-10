@@ -1,0 +1,14 @@
+# Quattro volte al giorno: se il camper e' offline si riprova sei ore dopo.
+# Il traffico totale non cambia, perche' si copiano solo le righe nuove.
+# Persistent: se il Home Hub era spento all'ora prevista, parte all'avvio.
+
+[Unit]
+Description=Camper Hub: copia di history.db quattro volte al giorno
+
+[Timer]
+OnCalendar=*-*-* 03,09,15,21:17
+RandomizedDelaySec=5min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

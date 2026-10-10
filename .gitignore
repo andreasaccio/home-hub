@@ -17,3 +17,7 @@ passwd
 .vscode/
 *.swp
 *~
+
+# python
+__pycache__/
+*.pyc
