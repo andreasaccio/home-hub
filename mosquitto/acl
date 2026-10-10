@@ -1,0 +1,9 @@
+# Permessi del listener 1883 (utenti con password) -> /etc/mosquitto/acl
+# Installato da install/setup-mosquitto.sh. Il listener locale 1884 non usa questo file.
+# Ogni dispositivo legge e scrive solo sotto il proprio root topic.
+# Le password non stanno qui: si impostano sul Pi con
+#   sudo bash install/setup-mosquitto.sh --utente <nome>
+
+# Sonoff TH "SONOFF-Sala" (ESPurna 1.14.1, 192.168.133.200)
+user sonoff-sala
+topic readwrite SONOFF-Sala/#

@@ -95,6 +95,7 @@ CANDIDATES=(
   /etc/systemd/system/openhab.service.d
   /etc/openhab
   /var/lib/openhab/jsondb /var/lib/openhab/config /var/lib/openhab/etc /var/lib/openhab/secrets
+  /etc/mosquitto
   /etc/NetworkManager/system-connections
   /etc/ssh
   /etc/samba/smb.conf

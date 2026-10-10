@@ -14,6 +14,8 @@ Piano e stato dei lavori: documento di progetto `claude/home-hub-piano.md` (prog
 | `openhab/persistence/` | Strategie di persistenza (`.persist`) |
 | `openhab/services/` | Solo i file che gestiamo noi: `addons.cfg`, `network.cfg` |
 | `install/deploy-openhab.sh` | Copia `openhab/` in `/etc/openhab` sul Pi |
+| `mosquitto/` | Broker MQTT: `homehub.conf` (listener) e `acl` (permessi per utente) |
+| `install/setup-mosquitto.sh` | Installa Mosquitto e copia `mosquitto/` in `/etc/mosquitto`; con `--utente` crea un utente o ne cambia la password |
 | `tools/` | Script di servizio: ricognizione, backup cifrato, ripristino VPN |
 
 ## Flusso di lavoro
@@ -27,9 +29,26 @@ Piano e stato dei lavori: documento di progetto `claude/home-hub-piano.md` (prog
    ```
    openHAB rilegge da solo i file modificati, senza riavvio.
 3. Lo script salva i file sostituiti o rimossi in `/var/backups/homehub-openhab/<data>/`.
+4. Per Mosquitto:
+   ```bash
+   sudo bash install/setup-mosquitto.sh                     # dopo ogni modifica a mosquitto/
+   sudo bash install/setup-mosquitto.sh --utente <nome>     # nuovo dispositivo o cambio password
+   ```
+   Ogni utente deve avere le sue righe in `mosquitto/acl`, altrimenti si collega ma non vede nessun topic.
+   File sostituiti in `/var/backups/homehub-mosquitto/<data>/`.
+
+## MQTT
+
+| Porta | Dove | Accesso |
+|---|---|---|
+| 1883 | LAN e VPN | utente e password, permessi da `mosquitto/acl` |
+| 1884 | solo 127.0.0.1 | senza password: openHAB e prove sul Pi |
+
+Prova dal Pi: `mosquitto_sub -h 127.0.0.1 -p 1884 -v -t '#' -W 60`.
 
 ## Regole
 
 - Tutti i file di testo hanno fine riga LF (vedi `.gitattributes`). Gli script `.sh` si lanciano con `bash`, quindi il bit di esecuzione non è indispensabile.
 - Nel repo non vanno segreti: password, token, chiavi e archivi di backup sono esclusi da `.gitignore`.
+- Le password MQTT stanno solo sul Pi, in `/etc/mosquitto/passwd` (hash), e nel gestore di password.
 - `/etc/openhab/services/runtime.cfg` non è gestito dal repo. Contiene `org.apache.karaf.shell:sshHost = 127.0.0.1`, la console di openHAB solo locale: non riportarlo a `0.0.0.0`.
