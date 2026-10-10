@@ -54,7 +54,7 @@ Prova dal Pi: `mosquitto_sub -h 127.0.0.1 -p 1884 -v -t '#' -W 60`.
 
 ## Pagina
 
-- Browser: `http://192.168.133.251:8080/basicui/app?sitemap=homehub` (da casa o in VPN).
+- Browser: `http://192.168.133.251:8080/basicui/app?sitemap=homehub` (da casa o in VPN). Serve l'add-on Basic UI (`ui = basic` in `services/addons.cfg`): senza, Main UI risponde "Not Found".
 - App openHAB per iPhone: indirizzo `http://192.168.133.251:8080`, sitemap predefinita `homehub`.
 - Grafici dallo storico rrd4j. Per aggiungere una linea a un grafico: mettere l'Item nel gruppo `gGraf...` corrispondente.
 
