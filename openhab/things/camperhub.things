@@ -1,0 +1,50 @@
+// Camper Hub (LeoRaspy) letto via VPN: GET http://10.8.0.5:8080/api/state
+// Un JSON di circa 4,3 kB con tutto lo stato live. Ogni lettura passa sul 4G del
+// camper: con refresh=60 sono circa 6 MB al giorno di dati utili.
+// strictErrorHandling=true: se il camper non risponde il Thing va OFFLINE e gli
+// Item diventano UNDEF, cosi' lo storico resta vuoto invece di ripetere l'ultimo
+// valore. Lo storico completo del camper resta in history.db su LeoRaspy.
+// Tutti i canali sono READONLY: da qui non si comanda niente del camper.
+
+Thing http:url:camperhub "Camper Hub (LeoRaspy, via VPN)" [ baseURL="http://10.8.0.5:8080/api/state", refresh=60, timeout=15000, strictErrorHandling=true ]
+{
+Channels:
+    // Batterie servizi (BDS-180)
+    Type number   : batt1_v        "Batteria 1 - tensione"      [ stateTransformation="JSONPATH($.battery.battery1.voltage_v)", unit="V", mode="READONLY" ]
+    Type number   : batt1_pct      "Batteria 1 - livello"       [ stateTransformation="JSONPATH($.battery.battery1.level_pct)", unit="%", mode="READONLY" ]
+    Type number   : batt2_v        "Batteria 2 - tensione"      [ stateTransformation="JSONPATH($.battery.battery2.voltage_v)", unit="V", mode="READONLY" ]
+    Type number   : batt2_pct      "Batteria 2 - livello"       [ stateTransformation="JSONPATH($.battery.battery2.level_pct)", unit="%", mode="READONLY" ]
+    Type number   : batt_a         "Batterie - corrente"        [ stateTransformation="JSONPATH($.battery.current_a)", unit="A", mode="READONLY" ]
+    Type string   : batt_autonomia "Batterie - autonomia"       [ stateTransformation="JSONPATH($.battery.remaining.text)", mode="READONLY" ]
+    Type string   : batt_in_uso    "Batteria in uso"            [ stateTransformation="JSONPATH($.battery.selected)", mode="READONLY" ]
+
+    // Rete 230 V (Shelly del camper)
+    Type number   : gen_w          "Generale - potenza"         [ stateTransformation="JSONPATH($.ac.general.power_w)", unit="W", mode="READONLY" ]
+    Type number   : gen_v          "Generale - tensione"        [ stateTransformation="JSONPATH($.ac.general.voltage_v)", unit="V", mode="READONLY" ]
+    Type number   : gen_wh         "Generale - energia"         [ stateTransformation="JSONPATH($.ac.general.energy_total_wh)", unit="Wh", mode="READONLY" ]
+    Type switch   : gen_uscita     "Generale - uscita"          [ stateTransformation="JSONPATH($.ac.general.output)", onValue="true", offValue="false", mode="READONLY" ]
+    Type number   : carica_w       "Caricabatterie - potenza"   [ stateTransformation="JSONPATH($.ac.charger.power_w)", unit="W", mode="READONLY" ]
+    Type number   : truma_w        "Truma - potenza"            [ stateTransformation="JSONPATH($.ac.truma.power_w)", unit="W", mode="READONLY" ]
+    Type number   : altro_w        "Altri carichi - potenza"    [ stateTransformation="JSONPATH($.ac.other_power_w)", unit="W", mode="READONLY" ]
+
+    // Ambiente: LeoTemp (abitacolo) e frigorifero
+    Type number   : temp           "Abitacolo - temperatura"    [ stateTransformation="JSONPATH($.environment.leotemp.temperature_c)", unit="°C", mode="READONLY" ]
+    Type number   : umid           "Abitacolo - umidità"        [ stateTransformation="JSONPATH($.environment.leotemp.humidity_pct)", unit="%", mode="READONLY" ]
+    Type string   : luce           "Abitacolo - luce"           [ stateTransformation="JSONPATH($.environment.leotemp.light_label)", mode="READONLY" ]
+    Type number   : frigo_temp     "Frigo - temperatura"        [ stateTransformation="JSONPATH($.environment.fridge.temperature_c)", unit="°C", mode="READONLY" ]
+    Type string   : frigo_stato    "Frigo - stato"              [ stateTransformation="JSONPATH($.environment.fridge.analysis.label)", mode="READONLY" ]
+
+    // 4G (Tenda 4G03)
+    Type number   : lte_rsrp       "4G - RSRP"                  [ stateTransformation="JSONPATH($.network.tenda.lte.signal.rsrp_dbm)", mode="READONLY" ]
+    Type number   : lte_sinr       "4G - SINR"                  [ stateTransformation="JSONPATH($.network.tenda.lte.signal.sinr_db)", mode="READONLY" ]
+    Type string   : lte_segnale    "4G - segnale"               [ stateTransformation="JSONPATH($.network.tenda.lte.signal.label)", mode="READONLY" ]
+    Type number   : ping_ms        "Ping internet"              [ stateTransformation="JSONPATH($.network.tenda.quality.internet.avg_ms)", mode="READONLY" ]
+    Type number   : traffico_mb    "Traffico 4G totale"         [ stateTransformation="JSONPATH($.network.tenda.lte.statistics_mb)", mode="READONLY" ]
+
+    // Diagnostica
+    Type datetime : aggiornato     "Dati del"                   [ stateTransformation="JSONPATH($.timestamp)", mode="READONLY" ]
+    Type switch   : pompa_armato   "Blocco pompa armato"        [ stateTransformation="JSONPATH($.pump_cutoff.armed)", onValue="true", offValue="false", mode="READONLY" ]
+    Type number   : leotemp_batt   "LeoTemp - batteria"         [ stateTransformation="JSONPATH($.environment.leotemp.battery_pct)", unit="%", mode="READONLY" ]
+    Type number   : frigo_batt     "Sensore frigo - batteria"   [ stateTransformation="JSONPATH($.environment.fridge.battery_pct)", unit="%", mode="READONLY" ]
+    Type number   : leak_batt      "Sensore allagamento - batteria" [ stateTransformation="JSONPATH($.environment.leak.battery_pct)", unit="%", mode="READONLY" ]
+}

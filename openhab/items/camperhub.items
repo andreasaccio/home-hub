@@ -1,0 +1,46 @@
+// Item di Camper Hub - Thing in things/camperhub.things (binding HTTP, /api/state)
+// Quando il camper non risponde gli Item sono UNDEF: lo storico rrd4j resta vuoto
+// in quei periodi (rrd4j non accetta valori nel passato, i buchi non si riempiono).
+// Allarmi (allagamento, frigo, pompa) restano gestiti da Camper Hub con Telegram.
+
+Group gCamper     "Camper Hub"
+Group gCamperDiag "Camper Hub - diagnostica"
+
+// --- Batterie servizi (BDS-180) ---------------------------------------------
+Number:ElectricPotential Camper_Batt1_Tensione   "Camper - batteria 1 [%.1f V]"        <batterylevel> (gCamper, gStorico) { channel="http:url:camperhub:batt1_v", unit="V" }
+Number:Dimensionless     Camper_Batt1_Livello    "Camper - batteria 1 [%.0f %%]"       <batterylevel> (gCamper, gStorico) { channel="http:url:camperhub:batt1_pct", unit="%" }
+Number:ElectricPotential Camper_Batt2_Tensione   "Camper - batteria 2 [%.1f V]"        <batterylevel> (gCamper, gStorico) { channel="http:url:camperhub:batt2_v", unit="V" }
+Number:Dimensionless     Camper_Batt2_Livello    "Camper - batteria 2 [%.0f %%]"       <batterylevel> (gCamper, gStorico) { channel="http:url:camperhub:batt2_pct", unit="%" }
+Number:ElectricCurrent   Camper_Batt_Corrente    "Camper - corrente batterie [%.1f A]" <energy>       (gCamper, gStorico) { channel="http:url:camperhub:batt_a", unit="A" }
+String                   Camper_Batt_Autonomia   "Camper - autonomia [%s]"             <time>         (gCamper)           { channel="http:url:camperhub:batt_autonomia" }
+String                   Camper_Batt_InUso       "Camper - batteria in uso [%s]"       <batterylevel> (gCamper)           { channel="http:url:camperhub:batt_in_uso" }
+
+// --- Rete 230 V (Shelly del camper) -------------------------------------------
+Number:Power             Camper_Generale_Potenza "Camper - 230 V generale [%.0f W]"    <energy>       (gCamper, gStorico) { channel="http:url:camperhub:gen_w", unit="W" }
+Number:ElectricPotential Camper_Generale_Tensione "Camper - tensione 230 V [%.0f V]"   <energy>       (gCamper, gStorico) { channel="http:url:camperhub:gen_v", unit="V" }
+Number:Energy            Camper_Generale_Energia "Camper - energia 230 V [%.2f kWh]"   <energy>       (gCamper, gStorico) { channel="http:url:camperhub:gen_wh", unit="kWh" }
+Switch                   Camper_Generale_Uscita  "Camper - interruttore generale"      <switch>       (gCamper)           { channel="http:url:camperhub:gen_uscita" }
+Number:Power             Camper_Caricabatterie_Potenza "Camper - caricabatterie [%.0f W]" <energy>    (gCamper, gStorico) { channel="http:url:camperhub:carica_w", unit="W" }
+Number:Power             Camper_Truma_Potenza    "Camper - stufa Truma [%.0f W]"       <heating>      (gCamper, gStorico) { channel="http:url:camperhub:truma_w", unit="W" }
+Number:Power             Camper_Altro_Potenza    "Camper - altri carichi [%.0f W]"     <energy>       (gCamper, gStorico) { channel="http:url:camperhub:altro_w", unit="W" }
+
+// --- Ambiente ---------------------------------------------------------------
+Number:Temperature       Camper_Temperatura      "Camper - temperatura [%.1f °C]"      <temperature>  (gCamper, gStorico) { channel="http:url:camperhub:temp", unit="°C" }
+Number:Dimensionless     Camper_Umidita          "Camper - umidità [%.0f %%]"          <humidity>     (gCamper, gStorico) { channel="http:url:camperhub:umid", unit="%" }
+String                   Camper_Luce             "Camper - luce [%s]"                  <light>        (gCamper)           { channel="http:url:camperhub:luce" }
+Number:Temperature       Camper_Frigo_Temperatura "Camper - frigo [%.1f °C]"           <temperature>  (gCamper, gStorico) { channel="http:url:camperhub:frigo_temp", unit="°C" }
+String                   Camper_Frigo_Stato      "Camper - stato frigo [%s]"           <temperature>  (gCamper)           { channel="http:url:camperhub:frigo_stato" }
+
+// --- 4G -----------------------------------------------------------------------
+Number                   Camper_LTE_RSRP         "Camper - 4G RSRP [%.0f dBm]"         <network>      (gCamper, gStorico) { channel="http:url:camperhub:lte_rsrp" }
+Number                   Camper_LTE_SINR         "Camper - 4G SINR [%.0f dB]"          <network>      (gCamper, gStorico) { channel="http:url:camperhub:lte_sinr" }
+String                   Camper_LTE_Segnale      "Camper - segnale 4G [%s]"            <network>      (gCamper)           { channel="http:url:camperhub:lte_segnale" }
+Number                   Camper_Ping_Internet    "Camper - ping internet [%.0f ms]"    <network>      (gCamper, gStorico) { channel="http:url:camperhub:ping_ms" }
+Number                   Camper_Traffico_MB      "Camper - traffico 4G totale [%.0f MB]" <network>    (gCamper, gStorico) { channel="http:url:camperhub:traffico_mb" }
+
+// --- Diagnostica ---------------------------------------------------------------
+DateTime                 Camper_Aggiornato       "Camper - dati del [%1$td/%1$tm %1$tH:%1$tM]" <time> (gCamperDiag)       { channel="http:url:camperhub:aggiornato" }
+Switch                   Camper_Pompa_Armato     "Camper - blocco pompa armato"        <shield>       (gCamperDiag)       { channel="http:url:camperhub:pompa_armato" }
+Number:Dimensionless     Camper_LeoTemp_Batteria "Camper - batteria LeoTemp [%.0f %%]" <battery>      (gCamperDiag)       { channel="http:url:camperhub:leotemp_batt", unit="%" }
+Number:Dimensionless     Camper_Frigo_Batteria   "Camper - batteria sensore frigo [%.0f %%]" <battery> (gCamperDiag)      { channel="http:url:camperhub:frigo_batt", unit="%" }
+Number:Dimensionless     Camper_Allagamento_Batteria "Camper - batteria sensore allagamento [%.0f %%]" <battery> (gCamperDiag) { channel="http:url:camperhub:leak_batt", unit="%" }
