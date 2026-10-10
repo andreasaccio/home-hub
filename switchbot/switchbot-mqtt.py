@@ -232,6 +232,9 @@ class Bridge:
 
     def mqtt_stop(self):
         if self.client:
+            for s in self.sensors.values():   # senza il servizio i valori non si aggiornano
+                if s["online"]:
+                    self.publish(s["name"], "status", "offline")
             info = self.client.publish(f"{self.prefix}/bridge/status", "offline", qos=1, retain=True)
             try:
                 info.wait_for_publish(5)

@@ -18,9 +18,9 @@ offline_after = 900
 # mac: quello trovato con  sudo python3 switchbot-mqtt.py --scan 90
 
 [[sensore]]
-nome = "meterpro"
-mac = "B0:E9:FE:A9:31:C9"      # SwitchBot Meter Pro, confermato il 09/10/2026
+nome = "cucina"
+mac = "B0:E9:FE:A9:31:C9"      # SwitchBot Meter Pro, in cucina (modello 4)
 
-# [[sensore]]
-# nome = "esterno"
-# mac = "XX:XX:XX:XX:XX:XX"    # SwitchBot Indoor/Outdoor Thermo-Hygrometer, da trovare
+[[sensore]]
+nome = "balcone"
+mac = "DE:64:44:46:33:47"      # SwitchBot Indoor/Outdoor Thermo-Hygrometer, sul balcone (modello w)

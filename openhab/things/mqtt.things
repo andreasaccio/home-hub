@@ -16,4 +16,27 @@ Bridge mqtt:broker:mosquitto "Mosquitto (Home Hub)" [ host="127.0.0.1", port=188
         Type number : wifi        "Wi-Fi RSSI"  [ stateTopic="SONOFF-Sala/rssi" ]
         Type switch : online      "Online"      [ stateTopic="SONOFF-Sala/status", on="1", off="0" ]
     }
+
+    // Termoigrometri SwitchBot, letti via Bluetooth dal servizio switchbot-mqtt
+    // (vedi switchbot/). Thing OFFLINE quando switchbot/<nome>/status = offline:
+    // nessun annuncio da 15 minuti, oppure servizio fermato.
+    Thing topic switchbot_cucina "SwitchBot Meter Pro - Cucina" [ availabilityTopic="switchbot/cucina/status", payloadAvailable="online", payloadNotAvailable="offline" ]
+    {
+    Channels:
+        Type number   : temperatura "Temperatura"     [ stateTopic="switchbot/cucina/temperature", unit="°C" ]
+        Type number   : umidita     "Umidità"         [ stateTopic="switchbot/cucina/humidity", unit="%" ]
+        Type number   : batteria    "Batteria"        [ stateTopic="switchbot/cucina/battery", unit="%" ]
+        Type number   : rssi        "RSSI"            [ stateTopic="switchbot/cucina/rssi" ]
+        Type datetime : visto       "Ultimo annuncio" [ stateTopic="switchbot/cucina/last_seen" ]
+    }
+
+    Thing topic switchbot_balcone "SwitchBot Indoor/Outdoor - Balcone" [ availabilityTopic="switchbot/balcone/status", payloadAvailable="online", payloadNotAvailable="offline" ]
+    {
+    Channels:
+        Type number   : temperatura "Temperatura"     [ stateTopic="switchbot/balcone/temperature", unit="°C" ]
+        Type number   : umidita     "Umidità"         [ stateTopic="switchbot/balcone/humidity", unit="%" ]
+        Type number   : batteria    "Batteria"        [ stateTopic="switchbot/balcone/battery", unit="%" ]
+        Type number   : rssi        "RSSI"            [ stateTopic="switchbot/balcone/rssi" ]
+        Type datetime : visto       "Ultimo annuncio" [ stateTopic="switchbot/balcone/last_seen" ]
+    }
 }
