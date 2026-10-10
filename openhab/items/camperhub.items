@@ -7,13 +7,15 @@ Group gCamper     "Camper Hub"
 Group gCamperDiag "Camper Hub - diagnostica"
 
 // --- Batterie servizi (BDS-180) ---------------------------------------------
-Number:ElectricPotential Camper_Batt1_Tensione   "Camper - batteria 1 [%.1f V]"        <batterylevel> (gCamper, gStorico, gGrafCamperTensioni) { channel="http:url:camperhub:batt1_v", unit="V" }
-Number:Dimensionless     Camper_Batt1_Livello    "Camper - batteria 1 [%.0f %%]"       <batterylevel> (gCamper, gStorico, gGrafCamperLivelli) { channel="http:url:camperhub:batt1_pct", unit="%" }
-Number:ElectricPotential Camper_Batt2_Tensione   "Camper - batteria 2 [%.1f V]"        <batterylevel> (gCamper, gStorico, gGrafCamperTensioni) { channel="http:url:camperhub:batt2_v", unit="V" }
-Number:Dimensionless     Camper_Batt2_Livello    "Camper - batteria 2 [%.0f %%]"       <batterylevel> (gCamper, gStorico, gGrafCamperLivelli) { channel="http:url:camperhub:batt2_pct", unit="%" }
+// Icona batterylevel solo sulle percentuali: e' dinamica e legge lo stato come
+// 0-100, quindi su 14,2 V disegnerebbe una batteria quasi scarica.
+Number:ElectricPotential Camper_Batt1_Tensione   "Camper - batteria 1, tensione [%.1f V]" <energy> (gCamper, gStorico, gGrafCamperTensioni) { channel="http:url:camperhub:batt1_v", unit="V" }
+Number:Dimensionless     Camper_Batt1_Livello    "Camper - batteria 1, carica [%.0f %%]" <batterylevel> (gCamper, gStorico, gGrafCamperLivelli) { channel="http:url:camperhub:batt1_pct", unit="%" }
+Number:ElectricPotential Camper_Batt2_Tensione   "Camper - batteria 2, tensione [%.1f V]" <energy> (gCamper, gStorico, gGrafCamperTensioni) { channel="http:url:camperhub:batt2_v", unit="V" }
+Number:Dimensionless     Camper_Batt2_Livello    "Camper - batteria 2, carica [%.0f %%]" <batterylevel> (gCamper, gStorico, gGrafCamperLivelli) { channel="http:url:camperhub:batt2_pct", unit="%" }
 Number:ElectricCurrent   Camper_Batt_Corrente    "Camper - corrente batterie [%.1f A]" <energy>       (gCamper, gStorico) { channel="http:url:camperhub:batt_a", unit="A" }
 String                   Camper_Batt_Autonomia   "Camper - autonomia [%s]"             <time>         (gCamper)           { channel="http:url:camperhub:batt_autonomia" }
-String                   Camper_Batt_InUso       "Camper - batteria in uso [%s]"       <batterylevel> (gCamper)           { channel="http:url:camperhub:batt_in_uso" }
+String                   Camper_Batt_InUso       "Camper - batteria in uso [%s]"       <battery>      (gCamper)           { channel="http:url:camperhub:batt_in_uso" }
 
 // --- Rete 230 V (Shelly del camper) -------------------------------------------
 Number:Power             Camper_Generale_Potenza "Camper - 230 V generale [%.0f W]"    <energy>       (gCamper, gStorico, gGrafCamper230) { channel="http:url:camperhub:gen_w", unit="W" }
