@@ -9,13 +9,15 @@
 //
 // Per ora solo lettura: temperatura impostata e modo hanno readOnly, cosi' dalla
 // UI non si cambia il termostato per sbaglio. Si comanda dall'app tado.
-// "Riscaldamento ora" e' una stringa (OFF/HEAT): rrd4j non la storicizza; lo
-// storico delle richieste di calore c'e' gia' in Caldaia_RichiestaTado (Shelly).
+// Valori HomeKit: riscaldamento ora 0=spento 1=riscalda 2=raffredda; modo
+// 0=off 1=heat 2=cool 3=auto. Le etichette in italiano vengono da "options".
+// Sono stringhe: rrd4j non le storicizza; lo storico delle richieste di calore
+// c'e' gia' in Caldaia_RichiestaTado (ingresso dello Shelly caldaia).
 
 Group gTado "tado"
 
 Number:Temperature   Tado_Sala_Temperatura   "Sala - temperatura (tado) [%.1f °C]"           <temperature> (gTado, gStorico) { channel="homekit:bridged-accessory:9a7bc8b8506a:2:thermostat#temperature-current-14", unit="°C" }
 Number:Temperature   Tado_Sala_Impostata     "Sala - temperatura impostata (tado) [%.1f °C]" <heating>     (gTado, gStorico) { channel="homekit:bridged-accessory:9a7bc8b8506a:2:thermostat#temperature-target-15", unit="°C", stateDescription=""[pattern="%.1f °C", readOnly=true] }
 Number:Dimensionless Tado_Sala_Umidita       "Sala - umidità (tado) [%.0f %%]"               <humidity>    (gTado, gStorico) { channel="homekit:bridged-accessory:9a7bc8b8506a:2:thermostat#relative-humidity-current-17", unit="%" }
-String               Tado_Sala_Riscaldamento "Sala - riscaldamento ora (tado) [%s]"          <fire>        (gTado)           { channel="homekit:bridged-accessory:9a7bc8b8506a:2:thermostat#heating-cooling-current-12" }
-String               Tado_Sala_Modo          "Sala - modo (tado) [%s]"                       <heating>     (gTado)           { channel="homekit:bridged-accessory:9a7bc8b8506a:2:thermostat#heating-cooling-target-13", stateDescription=""[pattern="%s", readOnly=true] }
+String               Tado_Sala_Riscaldamento "Sala - riscaldamento ora (tado) [%s]"          <fire>        (gTado)           { channel="homekit:bridged-accessory:9a7bc8b8506a:2:thermostat#heating-cooling-current-12", stateDescription=""[options="0=Spento,1=Riscalda,2=Raffredda", readOnly=true] }
+String               Tado_Sala_Modo          "Sala - modo (tado) [%s]"                       <heating>     (gTado)           { channel="homekit:bridged-accessory:9a7bc8b8506a:2:thermostat#heating-cooling-target-13", stateDescription=""[options="0=Spento,1=Riscaldamento,2=Raffrescamento,3=Automatico", readOnly=true] }
