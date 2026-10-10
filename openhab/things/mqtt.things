@@ -1,0 +1,19 @@
+// Broker MQTT e dispositivi MQTT di casa.
+// openHAB usa il listener locale di Mosquitto (127.0.0.1:1884, senza password):
+// nessuna credenziale in questo file. Vedi mosquitto/homehub.conf.
+
+Bridge mqtt:broker:mosquitto "Mosquitto (Home Hub)" [ host="127.0.0.1", port=1884, secure=false, clientID="openhab-homehub" ]
+{
+    // Sonoff TH "SONOFF-Sala" - ESPurna 1.14.1, 192.168.133.200, sensore DHT22 su GPIO14.
+    // Thing OFFLINE quando ESPurna pubblica 0 su SONOFF-Sala/status (LWT).
+    // Il rele' si comanda su SONOFF-Sala/relay/0/set con 0 o 1.
+    Thing topic sonoffsala "Sonoff TH - Sala" [ availabilityTopic="SONOFF-Sala/status", payloadAvailable="1", payloadNotAvailable="0" ]
+    {
+    Channels:
+        Type number : temperatura "Temperatura" [ stateTopic="SONOFF-Sala/temperature", unit="°C" ]
+        Type number : umidita     "Umidità"     [ stateTopic="SONOFF-Sala/humidity", unit="%" ]
+        Type switch : rele        "Relè"        [ stateTopic="SONOFF-Sala/relay/0", commandTopic="SONOFF-Sala/relay/0/set", on="1", off="0" ]
+        Type number : wifi        "Wi-Fi RSSI"  [ stateTopic="SONOFF-Sala/rssi" ]
+        Type switch : online      "Online"      [ stateTopic="SONOFF-Sala/status", on="1", off="0" ]
+    }
+}

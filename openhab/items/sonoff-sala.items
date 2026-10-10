@@ -1,0 +1,12 @@
+// Item del Sonoff TH "SONOFF-Sala" (ESPurna, MQTT) - Thing in things/mqtt.things
+// Nomi legati al dispositivo (SonoffSala_*): lo storico rrd4j segue il nome
+// dell'Item, quindi resta valido anche se cambia l'uso del rele'. Le etichette
+// si possono cambiare liberamente.
+
+Group gSonoffSala "Sonoff TH sala"
+
+Number:Temperature   SonoffSala_Temperatura "Sala - temperatura (Sonoff) [%.1f °C]" <temperature>      (gSonoffSala, gStorico) { channel="mqtt:topic:mosquitto:sonoffsala:temperatura", unit="°C" }
+Number:Dimensionless SonoffSala_Umidita     "Sala - umidità (Sonoff) [%.0f %%]"     <humidity>         (gSonoffSala, gStorico) { channel="mqtt:topic:mosquitto:sonoffsala:umidita", unit="%" }
+Switch               SonoffSala_Rele        "Sonoff sala - relè"                    <switch>           (gSonoffSala, gStorico) { channel="mqtt:topic:mosquitto:sonoffsala:rele" }
+Number               SonoffSala_WiFi        "Sonoff sala - Wi-Fi [%d dBm]"          <qualityofservice> (gSonoffSala)           { channel="mqtt:topic:mosquitto:sonoffsala:wifi" }
+Switch               SonoffSala_Online      "Sonoff sala - online"                  <network>          (gSonoffSala)           { channel="mqtt:topic:mosquitto:sonoffsala:online" }
