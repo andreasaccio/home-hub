@@ -22,6 +22,7 @@ Piano e stato dei lavori: documento di progetto `claude/home-hub-piano.md` (prog
 | `switchbot/` | Ponte Bluetooth → MQTT per i termoigrometri SwitchBot: `switchbot-mqtt.py`, `switchbot.toml` (sensori e MAC), `.service` |
 | `install/setup-switchbot.sh` | Installa pacchetti, script, configurazione e servizio `switchbot-mqtt` |
 | `tools/` | Script di servizio: ricognizione, backup cifrato, ripristino VPN |
+| `system/` | Drop-in systemd installati a mano (copia di riferimento): `openvpn@server.service.d/logdir.conf` ricrea `/var/log/openvpn`, che su openHABian sta in zram e si svuota a ogni riavvio |
 
 ## Flusso di lavoro
 

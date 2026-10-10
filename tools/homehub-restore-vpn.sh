@@ -149,6 +149,7 @@ if [ $APPLY -eq 0 ]; then
   Con --apply farei:
     1. apt-get install openvpn iptables
     2. copia di /etc/openvpn dal backup (l'attuale salvato in /etc/openvpn.pre-restore-$TS)
+       e drop-in LogsDirectory per openvpn@server (/var/log in zram si svuota a ogni riavvio)
     3. firewall: $([ "$FW_MODE" = unit ] && echo "unit iptables-openvpn.service e script /etc/iptables dal backup" || echo "unit e script generati da server.conf")
     4. ip_forward=1 in /etc/sysctl.d
     5. enable + start di openvpn@server e verifiche (servizio, porta ${PORT:-1194}/${PROTO:-tcp}, tun0, journal)
@@ -173,6 +174,19 @@ cp -a "$S/openvpn/." /etc/openvpn/ || die "copia di /etc/openvpn fallita"
 chown -R root:root /etc/openvpn
 STATUS=$(dir_of status); [ -n "$STATUS" ] && install -d -m 755 "$(dirname "$STATUS")"
 ok "/etc/openvpn ripristinato"
+# openHABian tiene /var/log in zram: le sottocartelle spariscono a ogni riavvio
+# e openvpn non parte (--status fails ... No such file or directory). systemd la
+# ricrea prima dell'avvio con LogsDirectory= (stesso file di system/ nel repo).
+for k in status log log-append; do
+  f=$(dir_of "$k")
+  case "$f" in /var/log/*/*) LOGSUB=${f#/var/log/}; LOGSUB=${LOGSUB%%/*}; break ;; esac
+done
+if [ -n "${LOGSUB:-}" ]; then
+  install -d -m 755 /etc/systemd/system/openvpn@server.service.d
+  printf '[Service]\n# /var/log sta in zram (openHABian): la cartella va ricreata a ogni avvio\nLogsDirectory=%s\n' "$LOGSUB" \
+    >/etc/systemd/system/openvpn@server.service.d/logdir.conf
+  ok "drop-in LogsDirectory=$LOGSUB (cartella dei log ricreata a ogni avvio)"
+fi
 
 step "7. Firewall"
 if [ "$FW_MODE" = unit ]; then

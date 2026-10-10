@@ -89,6 +89,7 @@ CANDIDATES=(
   /etc/openvpn
   /etc/iptables
   /etc/systemd/system/iptables-openvpn.service
+  /etc/systemd/system/openvpn@server.service.d
   /etc/sysctl.conf /etc/sysctl.d
   /etc/openhabian.conf
   /etc/default/openhab
