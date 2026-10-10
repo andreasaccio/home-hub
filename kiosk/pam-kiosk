@@ -1,0 +1,6 @@
+# /etc/pam.d/kiosk - sessione di kiosk.service (utente kiosk senza password)
+# pam_systemd crea la sessione su tty1: serve a cage per usare schermo e GPU.
+auth     required pam_permit.so
+account  required pam_unix.so
+session  required pam_unix.so
+session  required pam_systemd.so

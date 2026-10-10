@@ -1,0 +1,125 @@
+/* Pagina TV del Home Hub - tema scuro, pensata per 1920x1080 vista dal divano.
+   Colori: inchiostri e superfici scure, serie 1 blu e 2 arancio, colori di stato
+   riservati agli avvisi (sempre con icona e testo). */
+
+:root {
+  color-scheme: dark;
+  --page:      #0d0d0d;
+  --surface:   #1a1a19;
+  --surface-2: #222220;
+  --ink:       #f0efec;
+  --ink-2:     #c3c2b7;
+  --muted:     #898781;
+  --grid:      #2c2c2a;
+  --base:      #383835;
+  --ring:      rgba(255,255,255,0.10);
+  --s1:        #3987e5;   /* serie 1 */
+  --s2:        #d95926;   /* serie 2 */
+  --s1-track:  #172b44;   /* binario dei misuratori: blu scuro */
+  --good:      #0ca30c;
+  --warning:   #fab219;
+  --serious:   #ec835a;
+  --critical:  #d03b3b;
+  --flame:     #d95926;
+  font-family: "Inter", system-ui, "Segoe UI", sans-serif;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: var(--page); color: var(--ink); overflow: hidden; }
+body { cursor: none; }
+
+#stage {
+  position: absolute; left: 0; top: 0;
+  width: 1920px; height: 1080px;
+  padding: 34px 40px 36px;
+  transform-origin: 0 0;
+  transition: opacity .6s;
+}
+#stage.stale { opacity: .55; }
+
+h2 { margin: 0; font-size: 28px; font-weight: 600; letter-spacing: -0.01em; }
+
+/* --- testata ------------------------------------------------------------- */
+.top { height: 92px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
+.clock { display: flex; align-items: baseline; gap: 22px; }
+#ora { font-size: 76px; font-weight: 600; letter-spacing: -0.02em; line-height: 1; }
+#data { font-size: 30px; color: var(--ink-2); }
+
+.avvisi { list-style: none; margin: 0; padding: 0; display: flex; gap: 12px; flex-wrap: nowrap; justify-content: flex-end; max-width: 1180px; overflow: hidden; }
+.chip, .avvisi li {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 9px 18px 9px 14px; border-radius: 999px;
+  background: var(--surface-2); border: 1px solid var(--ring);
+  font-size: 22px; color: var(--ink); white-space: nowrap;
+}
+.chip svg, .avvisi svg { width: 26px; height: 26px; flex: none; }
+
+/* --- griglia ------------------------------------------------------------- */
+.grid { display: grid; grid-template-columns: 1fr 770px; gap: 26px; height: 896px; }
+.col { display: grid; grid-template-rows: auto 1fr; gap: 26px; min-height: 0; }
+.card {
+  background: var(--surface); border: 1px solid var(--ring); border-radius: 22px;
+  padding: 24px 28px; min-height: 0; display: flex; flex-direction: column;
+}
+.card-h { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; min-height: 44px; }
+
+/* --- mappa ----------------------------------------------------------------- */
+.caldaia { display: inline-flex; align-items: center; gap: 10px; font-size: 24px; color: var(--ink-2); }
+.caldaia svg { width: 28px; height: 28px; }
+.pianta { flex: 1; min-height: 0; position: relative; }
+.pianta svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+/* testi delle stanze: la misura la decide tv.js (font-size sull'elemento) */
+.room-name { font-weight: 600; fill: var(--ink); }
+.room-temp { font-weight: 600; fill: var(--ink); letter-spacing: -0.02em; }
+.room-sub  { fill: var(--ink); }   /* sui colori pieni l'inchiostro secondario non basta */
+.room-heat { fill: var(--ink); font-weight: 600; }
+.room-none { fill: #a3a19a; }
+.muri { fill: none; stroke: var(--ink-2); stroke-width: 6; stroke-linejoin: round; }
+
+.legenda { display: flex; align-items: center; gap: 34px; margin-top: 18px; font-size: 20px; color: var(--ink-2); min-height: 44px; }
+.legenda .scala { display: flex; align-items: flex-start; gap: 28px; }
+.legenda .scala > span { line-height: 14px; }
+.legenda .barra { position: relative; width: 300px; height: 14px; border-radius: 7px; }
+.legenda .ticks { position: relative; width: 300px; height: 22px; margin-top: 4px; font-size: 18px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.legenda .ticks span { position: absolute; transform: translateX(-50%); }
+.legenda .voce { display: inline-flex; align-items: center; gap: 10px; }
+.legenda svg { width: 24px; height: 24px; }
+
+/* --- riquadri casa ------------------------------------------------------------ */
+.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.tile { min-width: 0; }
+.t-label { font-size: 22px; color: var(--ink-2); }
+.t-value { font-size: 60px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.1; margin-top: 4px; }
+.t-value small { font-size: 30px; font-weight: 500; color: var(--ink-2); margin-left: 6px; letter-spacing: 0; }
+.t-meta { font-size: 20px; color: var(--ink-2); margin-top: 6px; min-height: 26px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.spark { height: 112px; margin-top: 12px; position: relative; }
+.spark svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.spark .ax { font-size: 16px; fill: var(--muted); }
+.spark .none { font-size: 18px; fill: var(--muted); }
+
+/* --- camper ----------------------------------------------------------------- */
+.batterie { display: grid; gap: 14px; }
+.batt { display: grid; grid-template-columns: 150px 1fr 96px 96px; align-items: center; gap: 18px; font-size: 24px; }
+.b-nome { color: var(--ink-2); }
+.b-pct { font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
+.b-v { color: var(--ink-2); text-align: right; font-variant-numeric: tabular-nums; }
+.meter { height: 16px; border-radius: 8px; background: var(--s1-track); overflow: hidden; }
+.meter .fill { display: block; height: 100%; width: 0; border-radius: 8px; background: var(--s1); transition: width .8s; }
+.meter .fill.warning { background: var(--warning); }
+.meter .fill.critical { background: var(--critical); }
+.b-info { font-size: 22px; color: var(--ink-2); margin: 14px 0 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.b-info b { color: var(--ink); font-weight: 600; }
+
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--grid); }
+.stat { min-width: 0; }
+.s-label { font-size: 20px; color: var(--ink-2); }
+.s-value { font-size: 38px; font-weight: 600; letter-spacing: -0.01em; margin-top: 2px; white-space: nowrap; }
+.s-sub { font-size: 19px; color: var(--muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.spark-h { display: flex; justify-content: space-between; align-items: center; margin-top: 18px; font-size: 20px; color: var(--ink-2); }
+.keys { display: inline-flex; gap: 22px; }
+.key { display: inline-flex; align-items: center; gap: 8px; }
+.key i { display: inline-block; width: 22px; height: 3px; border-radius: 2px; }
+.key i.k1 { background: var(--s1); }
+.key i.k2 { background: var(--s2); }
+.spark-camper { flex: 1; min-height: 80px; height: auto; margin-top: 8px; }

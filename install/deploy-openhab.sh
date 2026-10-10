@@ -6,7 +6,9 @@
 # rimossi): things, items, persistence, rules, sitemaps.
 # services: copiati solo i file presenti nel repo (addons.cfg, network.cfg),
 # senza toccare gli altri (es. runtime.cfg).
-# Non tocca automation/, transform/, html/, icons/.
+# html: solo le sottocartelle presenti nel repo (es. html/tv, la pagina della
+# TV), ciascuna in modo completo; il resto di html/ non viene toccato.
+# Non tocca automation/, transform/, icons/.
 #
 # Ogni file sostituito o rimosso viene salvato in
 #   /var/backups/homehub-openhab/<data>/
@@ -58,6 +60,17 @@ if [ -d "$SRC/services" ]; then
   echo "--- services (solo i file del repo)"
   out=$("${RS[@]}" --backup --backup-dir="$BK/services" "$SRC/services/" "$DST/services/")
   [ -n "$out" ] && { echo "$out"; CHANGES=1; } || echo "    nessuna modifica"
+fi
+
+if [ -d "$SRC/html" ]; then
+  for sub in "$SRC"/html/*/; do
+    [ -d "$sub" ] || continue
+    name=$(basename "$sub")
+    echo "--- html/$name (pagina statica: http://<pi>:8080/static/$name/)"
+    [ "$CHECK" -eq 1 ] || install -d -o openhab -g openhab "$DST/html/$name"
+    out=$("${RS[@]}" --delete --backup --backup-dir="$BK/html/$name" "$sub" "$DST/html/$name/")
+    [ -n "$out" ] && { echo "$out"; CHANGES=1; } || echo "    nessuna modifica"
+  done
 fi
 
 if [ "$CHECK" -eq 1 ]; then

@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Home Hub</title>
+<!-- Pagina per la TV della sala: 1920x1080, scalata alla finestra.
+     Servita da openHAB: http://192.168.133.251:8080/static/tv/index.html
+     Anteprima con dati finti: .../index.html?demo -->
+<link rel="stylesheet" href="tv.css">
+</head>
+<body>
+<div id="stage">
+
+  <header class="top">
+    <div class="clock"><span id="ora">--:--</span><span id="data"></span></div>
+    <ul id="avvisi" class="avvisi" aria-label="Avvisi"></ul>
+  </header>
+
+  <main class="grid">
+
+    <section class="card mappa">
+      <div class="card-h">
+        <h2>Casa</h2>
+        <span class="caldaia" id="caldaia"></span>
+      </div>
+      <div id="pianta" class="pianta"></div>
+      <div class="legenda" id="legenda"></div>
+    </section>
+
+    <div class="col">
+
+      <section class="card casa">
+        <div class="card-h"><h2>Casa, ultime 24 ore</h2></div>
+        <div class="tiles">
+          <div class="tile">
+            <div class="t-label">Fuori (balcone)</div>
+            <div class="t-value" id="fuori-v">—</div>
+            <div class="t-meta" id="fuori-m"></div>
+            <div class="spark" id="fuori-s"></div>
+          </div>
+          <div class="tile">
+            <div class="t-label">Consumo casa</div>
+            <div class="t-value" id="consumo-v">—</div>
+            <div class="t-meta" id="consumo-m"></div>
+            <div class="spark" id="consumo-s"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card camper">
+        <div class="card-h">
+          <h2>Camper</h2>
+          <span class="chip" id="camper-stato"></span>
+        </div>
+        <div class="batterie">
+          <div class="batt">
+            <span class="b-nome">Batteria 1</span>
+            <span class="meter"><span class="fill" id="b1-fill"></span></span>
+            <span class="b-pct" id="b1-pct">—</span>
+            <span class="b-v" id="b1-v">—</span>
+          </div>
+          <div class="batt">
+            <span class="b-nome">Batteria 2</span>
+            <span class="meter"><span class="fill" id="b2-fill"></span></span>
+            <span class="b-pct" id="b2-pct">—</span>
+            <span class="b-v" id="b2-v">—</span>
+          </div>
+        </div>
+        <div class="b-info" id="b-info"></div>
+        <div class="stats">
+          <div class="stat"><div class="s-label">Abitacolo</div><div class="s-value" id="c-temp">—</div><div class="s-sub" id="c-umid"></div></div>
+          <div class="stat"><div class="s-label">Frigo</div><div class="s-value" id="c-frigo">—</div><div class="s-sub" id="c-frigo-stato"></div></div>
+          <div class="stat"><div class="s-label">230 V</div><div class="s-value" id="c-230">—</div><div class="s-sub" id="c-230-sub"></div></div>
+          <div class="stat"><div class="s-label">4G</div><div class="s-value" id="c-4g">—</div><div class="s-sub" id="c-4g-sub"></div></div>
+        </div>
+        <div class="spark-h">
+          <span>Carica batterie, 24 ore</span>
+          <span class="keys">
+            <span class="key"><i class="k1"></i>Batteria 1</span>
+            <span class="key"><i class="k2"></i>Batteria 2</span>
+          </span>
+        </div>
+        <div class="spark spark-camper" id="camper-s"></div>
+      </section>
+
+    </div>
+  </main>
+</div>
+<script src="config.js"></script>
+<script src="tv.js"></script>
+</body>
+</html>

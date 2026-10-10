@@ -1,0 +1,37 @@
+# Chiosco della TV della sala: browser a schermo intero sull'uscita HDMI.
+# cage (compositor Wayland per una sola applicazione) avvia kiosk-browser.sh,
+# che aspetta openHAB e apre Chromium sulla pagina TV.
+# Installato da install/setup-kiosk.sh
+
+[Unit]
+Description=Pagina Home Hub sulla TV (cage + Chromium)
+After=systemd-user-sessions.service dbus.socket systemd-logind.service openhab.service
+Wants=dbus.socket systemd-logind.service
+# prende il posto del login testuale sullo schermo
+Conflicts=getty@tty1.service
+After=getty@tty1.service
+
+[Service]
+Type=simple
+User=kiosk
+PAMName=kiosk
+TTYPath=/dev/tty1
+TTYReset=yes
+TTYVHangup=yes
+TTYVTDisallocate=yes
+StandardInput=tty-fail
+StandardOutput=journal
+StandardError=journal
+UtmpIdentifier=tty1
+UtmpMode=user
+ExecStart=/usr/bin/cage -d -- /usr/local/lib/homehub/kiosk-browser.sh
+Restart=always
+RestartSec=10
+# openHAB ha la precedenza: il browser cede CPU e non puo' crescere oltre 1,3 GB
+Nice=5
+CPUWeight=50
+MemoryHigh=1000M
+MemoryMax=1300M
+
+[Install]
+WantedBy=multi-user.target

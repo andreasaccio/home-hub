@@ -14,6 +14,7 @@ Piano e stato dei lavori: documento di progetto `claude/home-hub-piano.md` (prog
 | `openhab/persistence/` | Strategie di persistenza (`.persist`) |
 | `openhab/services/` | Solo i file che gestiamo noi: `addons.cfg`, `network.cfg` |
 | `openhab/sitemaps/` | Pagina del Home Hub (`homehub.sitemap`); i gruppi dei grafici sono in `items/pagina.items` |
+| `openhab/html/tv/` | Pagina per la TV della sala (HTML/JS, dati via REST): `config.js` ha stanze, pianta e soglie degli avvisi |
 | `install/deploy-openhab.sh` | Copia `openhab/` in `/etc/openhab` sul Pi |
 | `mosquitto/` | Broker MQTT: `homehub.conf` (listener) e `acl` (permessi per utente) |
 | `install/setup-mosquitto.sh` | Installa Mosquitto e copia `mosquitto/` in `/etc/mosquitto`; con `--utente` crea un utente o ne cambia la password |
@@ -21,6 +22,8 @@ Piano e stato dei lavori: documento di progetto `claude/home-hub-piano.md` (prog
 | `install/setup-camper-sync.sh` | Installa sul Home Hub il timer di `camper-sync` e crea `/var/lib/homehub` |
 | `switchbot/` | Ponte Bluetooth → MQTT per i termoigrometri SwitchBot: `switchbot-mqtt.py`, `switchbot.toml` (sensori e MAC), `.service` |
 | `install/setup-switchbot.sh` | Installa pacchetti, script, configurazione e servizio `switchbot-mqtt` |
+| `kiosk/` | Chiosco sulla TV: `kiosk.service` (cage + Chromium su tty1), `kiosk-browser.sh`, `pam-kiosk` |
+| `install/setup-kiosk.sh` | Installa il chiosco e fissa l'uscita HDMI a 1920x1080; `--stop` lo disattiva |
 | `tools/` | Script di servizio: ricognizione, backup cifrato, ripristino VPN |
 | `system/` | Drop-in systemd installati a mano (copia di riferimento): `openvpn@server.service.d/logdir.conf` ricrea `/var/log/openvpn`, che su openHABian sta in zram e si svuota a ogni riavvio |
 
@@ -55,8 +58,19 @@ Prova dal Pi: `mosquitto_sub -h 127.0.0.1 -p 1884 -v -t '#' -W 60`.
 ## Pagina
 
 - Browser: `http://192.168.133.251:8080/basicui/app?sitemap=homehub` (da casa o in VPN). Serve l'add-on Basic UI (`ui = basic` in `services/addons.cfg`): senza, Main UI risponde "Not Found".
-- App openHAB per iPhone: indirizzo `http://192.168.133.251:8080`, sitemap predefinita `homehub`.
+- App openHAB per iPhone: indirizzo `http://192.168.133.251:8080`, sitemap predefinita `homehub`, utente e password vuoti (openHAB 5 rifiuta l'autenticazione Basic: con le credenziali compilate l'app riceve 401).
 - Grafici dallo storico rrd4j. Per aggiungere una linea a un grafico: mettere l'Item nel gruppo `gGraf...` corrispondente.
+
+## Pagina TV
+
+- Indirizzo: `http://192.168.133.251:8080/static/tv/index.html` (anche da PC, in casa o in VPN);
+  con `?demo` usa dati finti, con `?demo=offline` simula il camper spento.
+- Sul Pi la apre il servizio `kiosk` (Chromium a schermo intero sull'HDMI). Dopo un deploy
+  la pagina si ricarica da sola entro un minuto. `sudo systemctl restart kiosk` la riapre.
+- Mappa: stanze e rettangoli in `openhab/html/tv/config.js`, ricavati dalla pianta di progetto
+  con il nord in alto (balcone a est). Colore: grigio a 20 °C, blu sotto, rosso sopra.
+  Quando arrivano le testine tado: aggiungere i loro Item in testa a `temperatura`,
+  `umidita` e in `riscalda`/`impostata` della stanza.
 
 ## Storico di Camper Hub
 
