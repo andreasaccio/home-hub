@@ -1,0 +1,25 @@
+# Termoigrometri SwitchBot (annunci Bluetooth) -> Mosquitto locale.
+# Installato da install/setup-switchbot.sh in /etc/systemd/system/.
+# Log: journalctl -u switchbot-mqtt
+
+[Unit]
+Description=SwitchBot BLE -> MQTT (Home Hub)
+Wants=bluetooth.service
+After=bluetooth.service mosquitto.service
+
+[Service]
+ExecStart=/usr/bin/python3 /usr/local/lib/homehub/switchbot-mqtt.py --config /etc/homehub/switchbot.toml
+# utente di sistema senza privilegi, creato da setup-switchbot.sh; il gruppo
+# bluetooth basta per usare BlueZ via D-Bus
+User=switchbot
+Group=switchbot
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+Restart=always
+RestartSec=30
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target

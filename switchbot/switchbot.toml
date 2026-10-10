@@ -1,0 +1,26 @@
+# Configurazione di switchbot-mqtt -> /etc/homehub/switchbot.toml
+# Installata da install/setup-switchbot.sh. Si modifica qui, nel repo.
+
+[mqtt]
+# listener locale di Mosquitto, senza password (vedi mosquitto/homehub.conf)
+host = "127.0.0.1"
+port = 1884
+prefix = "switchbot"
+
+[publish]
+# un valore si ripubblica quando cambia, e comunque ogni min_interval secondi
+min_interval = 60
+# sensore offline se non si sente da offline_after secondi
+offline_after = 900
+
+# Un blocco per sensore. "nome" diventa il topic: switchbot/<nome>/...
+# e non va cambiato dopo, perche' openHAB e lo storico lo usano.
+# mac: quello trovato con  sudo python3 switchbot-mqtt.py --scan 90
+
+[[sensore]]
+nome = "meterpro"
+mac = "B0:E9:FE:A9:31:C9"      # SwitchBot Meter Pro, confermato il 09/10/2026
+
+# [[sensore]]
+# nome = "esterno"
+# mac = "XX:XX:XX:XX:XX:XX"    # SwitchBot Indoor/Outdoor Thermo-Hygrometer, da trovare

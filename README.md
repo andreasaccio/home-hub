@@ -18,6 +18,8 @@ Piano e stato dei lavori: documento di progetto `claude/home-hub-piano.md` (prog
 | `install/setup-mosquitto.sh` | Installa Mosquitto e copia `mosquitto/` in `/etc/mosquitto`; con `--utente` crea un utente o ne cambia la password |
 | `camper/` | Copia incrementale di `history.db` di Camper Hub: `camper-export.py` e `setup-camper-export.sh` (vanno su LeoRaspy), `camper-sync.py` con `.service` e `.timer` (Home Hub) |
 | `install/setup-camper-sync.sh` | Installa sul Home Hub il timer di `camper-sync` e crea `/var/lib/homehub` |
+| `switchbot/` | Ponte Bluetooth → MQTT per i termoigrometri SwitchBot: `switchbot-mqtt.py`, `switchbot.toml` (sensori e MAC), `.service` |
+| `install/setup-switchbot.sh` | Installa pacchetti, script, configurazione e servizio `switchbot-mqtt` |
 | `tools/` | Script di servizio: ricognizione, backup cifrato, ripristino VPN |
 
 ## Flusso di lavoro
@@ -60,6 +62,12 @@ Prova dal Pi: `mosquitto_sub -h 127.0.0.1 -p 1884 -v -t '#' -W 60`.
   journalctl -u camper-sync -n 20                   # ultime esecuzioni
   ```
 - Se cambia `camper-export.py`, va reinstallato su LeoRaspy con `setup-camper-export.sh`.
+
+## SwitchBot
+
+- `switchbot-mqtt` (utente di sistema `switchbot`, gruppo `bluetooth`) ascolta gli annunci Bluetooth dei sensori elencati in `switchbot/switchbot.toml` e pubblica su Mosquitto locale `switchbot/<nome>/temperature|humidity|battery|rssi|status|last_seen`.
+- Trovare i sensori: `sudo python3 /usr/local/lib/homehub/switchbot-mqtt.py --scan 90`.
+- Dopo ogni modifica a `switchbot/`: `sudo bash install/setup-switchbot.sh`. Log: `journalctl -u switchbot-mqtt`.
 
 ## Regole
 
