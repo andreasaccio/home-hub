@@ -1,0 +1,12 @@
+// Gruppi usati solo dai grafici della pagina (sitemaps/homehub.sitemap).
+// Un grafico su un gruppo disegna una linea per ogni membro: l'appartenenza
+// si dichiara sui singoli Item, negli altri file .items. Questi gruppi non
+// vanno nello storico: i dati sono quelli dei membri.
+
+Group gGrafTemperatureCasa   "Temperature in casa e fuori"
+Group gGrafUmiditaCasa       "Umidità in casa e fuori"
+Group gGrafRiscaldamento     "Sala: misurata e impostata (tado)"
+Group gGrafCamperTensioni    "Camper: tensione batterie"
+Group gGrafCamperLivelli     "Camper: carica batterie"
+Group gGrafCamperTemperature "Camper: abitacolo e frigo"
+Group gGrafCamper230         "Camper: potenze 230 V"

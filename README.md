@@ -13,6 +13,7 @@ Piano e stato dei lavori: documento di progetto `claude/home-hub-piano.md` (prog
 | `openhab/items/` | Item (`.items`) |
 | `openhab/persistence/` | Strategie di persistenza (`.persist`) |
 | `openhab/services/` | Solo i file che gestiamo noi: `addons.cfg`, `network.cfg` |
+| `openhab/sitemaps/` | Pagina del Home Hub (`homehub.sitemap`); i gruppi dei grafici sono in `items/pagina.items` |
 | `install/deploy-openhab.sh` | Copia `openhab/` in `/etc/openhab` sul Pi |
 | `mosquitto/` | Broker MQTT: `homehub.conf` (listener) e `acl` (permessi per utente) |
 | `install/setup-mosquitto.sh` | Installa Mosquitto e copia `mosquitto/` in `/etc/mosquitto`; con `--utente` crea un utente o ne cambia la password |
@@ -49,6 +50,12 @@ Piano e stato dei lavori: documento di progetto `claude/home-hub-piano.md` (prog
 | 1884 | solo 127.0.0.1 | senza password: openHAB e prove sul Pi |
 
 Prova dal Pi: `mosquitto_sub -h 127.0.0.1 -p 1884 -v -t '#' -W 60`.
+
+## Pagina
+
+- Browser: `http://192.168.133.251:8080/basicui/app?sitemap=homehub` (da casa o in VPN).
+- App openHAB per iPhone: indirizzo `http://192.168.133.251:8080`, sitemap predefinita `homehub`.
+- Grafici dallo storico rrd4j. Per aggiungere una linea a un grafico: mettere l'Item nel gruppo `gGraf...` corrispondente.
 
 ## Storico di Camper Hub
 

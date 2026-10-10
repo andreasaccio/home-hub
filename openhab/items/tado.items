@@ -16,8 +16,8 @@
 
 Group gTado "tado"
 
-Number:Temperature   Tado_Sala_Temperatura   "Sala - temperatura (tado) [%.1f °C]"           <temperature> (gTado, gStorico) { channel="homekit:bridged-accessory:9a7bc8b8506a:2:thermostat#temperature-current-14", unit="°C" }
-Number:Temperature   Tado_Sala_Impostata     "Sala - temperatura impostata (tado) [%.1f °C]" <heating>     (gTado, gStorico) { channel="homekit:bridged-accessory:9a7bc8b8506a:2:thermostat#temperature-target-15", unit="°C", stateDescription=""[pattern="%.1f °C", readOnly=true] }
-Number:Dimensionless Tado_Sala_Umidita       "Sala - umidità (tado) [%.0f %%]"               <humidity>    (gTado, gStorico) { channel="homekit:bridged-accessory:9a7bc8b8506a:2:thermostat#relative-humidity-current-17", unit="%" }
+Number:Temperature   Tado_Sala_Temperatura   "Sala - temperatura (tado) [%.1f °C]"           <temperature> (gTado, gStorico, gGrafTemperatureCasa, gGrafRiscaldamento) { channel="homekit:bridged-accessory:9a7bc8b8506a:2:thermostat#temperature-current-14", unit="°C" }
+Number:Temperature   Tado_Sala_Impostata     "Sala - temperatura impostata (tado) [%.1f °C]" <heating>     (gTado, gStorico, gGrafRiscaldamento) { channel="homekit:bridged-accessory:9a7bc8b8506a:2:thermostat#temperature-target-15", unit="°C", stateDescription=""[pattern="%.1f °C", readOnly=true] }
+Number:Dimensionless Tado_Sala_Umidita       "Sala - umidità (tado) [%.0f %%]"               <humidity>    (gTado, gStorico, gGrafUmiditaCasa) { channel="homekit:bridged-accessory:9a7bc8b8506a:2:thermostat#relative-humidity-current-17", unit="%" }
 String               Tado_Sala_Riscaldamento "Sala - riscaldamento ora (tado) [%s]"          <fire>        (gTado)           { channel="homekit:bridged-accessory:9a7bc8b8506a:2:thermostat#heating-cooling-current-12", stateDescription=""[options="0=Spento,1=Riscalda,2=Raffredda", readOnly=true] }
 String               Tado_Sala_Modo          "Sala - modo (tado) [%s]"                       <heating>     (gTado)           { channel="homekit:bridged-accessory:9a7bc8b8506a:2:thermostat#heating-cooling-target-13", stateDescription=""[options="0=Spento,1=Riscaldamento,2=Raffrescamento,3=Automatico", readOnly=true] }

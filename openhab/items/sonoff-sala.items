@@ -5,8 +5,8 @@
 
 Group gSonoffSala "Sonoff TH sala"
 
-Number:Temperature   SonoffSala_Temperatura "Sala - temperatura (Sonoff) [%.1f °C]" <temperature>      (gSonoffSala, gStorico) { channel="mqtt:topic:mosquitto:sonoffsala:temperatura", unit="°C" }
-Number:Dimensionless SonoffSala_Umidita     "Sala - umidità (Sonoff) [%.0f %%]"     <humidity>         (gSonoffSala, gStorico) { channel="mqtt:topic:mosquitto:sonoffsala:umidita", unit="%" }
+Number:Temperature   SonoffSala_Temperatura "Sala - temperatura (Sonoff) [%.1f °C]" <temperature>      (gSonoffSala, gStorico, gGrafTemperatureCasa) { channel="mqtt:topic:mosquitto:sonoffsala:temperatura", unit="°C" }
+Number:Dimensionless SonoffSala_Umidita     "Sala - umidità (Sonoff) [%.0f %%]"     <humidity>         (gSonoffSala, gStorico, gGrafUmiditaCasa) { channel="mqtt:topic:mosquitto:sonoffsala:umidita", unit="%" }
 Switch               SonoffSala_Rele        "Sala - ciabatta Broadlink e telecamera"                    <switch>           (gSonoffSala, gStorico) { channel="mqtt:topic:mosquitto:sonoffsala:rele" }
 Number               SonoffSala_WiFi        "Sonoff sala - Wi-Fi [%d dBm]"          <qualityofservice> (gSonoffSala)           { channel="mqtt:topic:mosquitto:sonoffsala:wifi" }
 Switch               SonoffSala_Online      "Sonoff sala - online"                  <network>          (gSonoffSala)           { channel="mqtt:topic:mosquitto:sonoffsala:online" }

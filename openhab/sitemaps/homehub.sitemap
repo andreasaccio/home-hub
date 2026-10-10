@@ -1,0 +1,173 @@
+// Pagina del Home Hub: casa e camper.
+// Browser: http://192.168.133.251:8080/basicui/app?sitemap=homehub
+// App openHAB (iPhone): sitemap predefinita "homehub".
+// Grafici dallo storico rrd4j; i gruppi gGraf* sono in items/pagina.items.
+
+sitemap homehub label="Home Hub" {
+
+    Frame label="Adesso" {
+        Text item=SwitchBotBalcone_Temperatura label="Fuori (balcone) [%.1f °C]"
+        Text item=Tado_Sala_Temperatura        label="Sala [%.1f °C]"
+        Text item=Tado_Sala_Riscaldamento      label="Riscaldamento sala [%s]"
+        Text item=Rete_Potenza                 label="Consumo casa [%.0f W]"
+        Text item=Camper_Batt2_Livello         label="Camper - batteria 2 [%.0f %%]"
+        Text item=Camper_Temperatura           label="Camper - abitacolo [%.1f °C]"
+    }
+
+    Frame label="Casa" {
+        Text label="Temperature e umidità" icon="temperature" {
+            Frame label="Temperature" {
+                Text item=SwitchBotBalcone_Temperatura
+                Text item=Tado_Sala_Temperatura
+                Text item=SonoffSala_Temperatura
+                Text item=SwitchBotCucina_Temperatura
+            }
+            Frame label="Umidità" {
+                Text item=SwitchBotBalcone_Umidita
+                Text item=Tado_Sala_Umidita
+                Text item=SonoffSala_Umidita
+                Text item=SwitchBotCucina_Umidita
+            }
+            Frame label="Ultime 24 ore" {
+                Chart item=gGrafTemperatureCasa period=D refresh=300000 service="rrd4j"
+                Chart item=gGrafUmiditaCasa     period=D refresh=300000 service="rrd4j"
+            }
+            Frame label="Ultima settimana" {
+                Chart item=gGrafTemperatureCasa period=W refresh=900000 service="rrd4j"
+            }
+        }
+
+        Text label="Riscaldamento" icon="heating" {
+            Frame label="tado (sala)" {
+                Text item=Tado_Sala_Temperatura
+                Text item=Tado_Sala_Impostata
+                Text item=Tado_Sala_Riscaldamento
+                Text item=Tado_Sala_Modo
+            }
+            Frame label="Caldaia (Shelly)" {
+                Text item=Caldaia_RichiestaTado
+                Text item=Caldaia_Comando
+                Text item=Caldaia_UltimoContatto
+            }
+            Frame label="Ultime 24 ore" {
+                Chart item=gGrafRiscaldamento    period=D refresh=300000 service="rrd4j"
+                Chart item=Caldaia_RichiestaTado period=D refresh=300000 service="rrd4j"
+            }
+        }
+
+        Text label="Energia" icon="energy" {
+            Frame label="Rete Enel" {
+                Text item=Rete_Potenza
+                Text item=Rete_Energia
+                Text item=Rete_Tensione
+                Text item=Rete_FattorePotenza
+            }
+            Frame label="Consumo" {
+                Chart item=Rete_Potenza period=D refresh=300000 service="rrd4j"
+                Chart item=Rete_Potenza period=W refresh=900000 service="rrd4j"
+            }
+        }
+
+        Text label="Comandi" icon="switch" {
+            Frame label="Attenzione: questi comandi agiscono davvero" {
+                Switch item=SonoffSala_Rele
+                Switch item=Caldaia_Comando label="Caldaia - comando (forzatura)"
+            }
+        }
+
+        Text label="Dispositivi" icon="network" {
+            Frame label="Sensori Bluetooth (SwitchBot)" {
+                Text item=SwitchBotCucina_Batteria
+                Text item=SwitchBotBalcone_Batteria
+                Text item=SwitchBotCucina_UltimoAnnuncio
+                Text item=SwitchBotBalcone_UltimoAnnuncio
+            }
+            Frame label="Clima sala (Shelly)" {
+                Text item=ClimaSala_Rele
+                Text item=ClimaSala_Ingresso
+            }
+            Frame label="Wi-Fi" {
+                Text item=SonoffSala_Online
+                Text item=SonoffSala_WiFi
+                Text item=Caldaia_WiFi
+                Text item=ClimaSala_WiFi
+                Text item=ShellyEM_WiFi
+                Text item=ShellyEM_UltimoContatto
+            }
+        }
+    }
+
+    Frame label="Camper" {
+        Text item=Camper_Aggiornato
+        Text item=Camper_Batt1_Livello
+        Text item=Camper_Batt2_Livello
+        Text item=Camper_Temperatura
+        Text item=Camper_Frigo_Temperatura
+
+        Text label="Batterie" icon="batterylevel" {
+            Frame label="BDS-180" {
+                Text item=Camper_Batt1_Tensione
+                Text item=Camper_Batt1_Livello
+                Text item=Camper_Batt2_Tensione
+                Text item=Camper_Batt2_Livello
+                Text item=Camper_Batt_Corrente
+                Text item=Camper_Batt_Autonomia
+                Text item=Camper_Batt_InUso
+            }
+            Frame label="Ultime 24 ore" {
+                Chart item=gGrafCamperLivelli  period=D refresh=300000 service="rrd4j"
+                Chart item=gGrafCamperTensioni period=D refresh=300000 service="rrd4j"
+            }
+            Frame label="Ultima settimana" {
+                Chart item=gGrafCamperLivelli period=W refresh=900000 service="rrd4j"
+            }
+        }
+
+        Text label="Ambiente" icon="temperature" {
+            Frame {
+                Text item=Camper_Temperatura
+                Text item=Camper_Umidita
+                Text item=Camper_Luce
+                Text item=Camper_Frigo_Temperatura
+                Text item=Camper_Frigo_Stato
+            }
+            Frame label="Ultime 24 ore" {
+                Chart item=gGrafCamperTemperature period=D refresh=300000 service="rrd4j"
+            }
+        }
+
+        Text label="230 V" icon="energy" {
+            Frame {
+                Text item=Camper_Generale_Uscita
+                Text item=Camper_Generale_Potenza
+                Text item=Camper_Generale_Tensione
+                Text item=Camper_Caricabatterie_Potenza
+                Text item=Camper_Truma_Potenza
+                Text item=Camper_Altro_Potenza
+                Text item=Camper_Generale_Energia
+            }
+            Frame label="Ultime 24 ore" {
+                Chart item=gGrafCamper230 period=D refresh=300000 service="rrd4j"
+            }
+        }
+
+        Text label="4G e sensori" icon="network" {
+            Frame label="4G" {
+                Text item=Camper_LTE_Segnale
+                Text item=Camper_LTE_RSRP
+                Text item=Camper_LTE_SINR
+                Text item=Camper_Ping_Internet
+                Text item=Camper_Traffico_MB
+            }
+            Frame label="Ultime 24 ore" {
+                Chart item=Camper_LTE_RSRP period=D refresh=300000 service="rrd4j"
+            }
+            Frame label="Diagnostica" {
+                Text item=Camper_Pompa_Armato
+                Text item=Camper_LeoTemp_Batteria
+                Text item=Camper_Frigo_Batteria
+                Text item=Camper_Allagamento_Batteria
+            }
+        }
+    }
+}

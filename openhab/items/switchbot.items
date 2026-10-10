@@ -6,15 +6,15 @@
 Group gSwitchBot "SwitchBot"
 
 // --- Cucina (Meter Pro) -------------------------------------------------------
-Number:Temperature   SwitchBotCucina_Temperatura    "Cucina - temperatura [%.1f °C]"         <temperature>      (gSwitchBot, gStorico) { channel="mqtt:topic:mosquitto:switchbot_cucina:temperatura", unit="°C" }
-Number:Dimensionless SwitchBotCucina_Umidita        "Cucina - umidità [%.0f %%]"             <humidity>         (gSwitchBot, gStorico) { channel="mqtt:topic:mosquitto:switchbot_cucina:umidita", unit="%" }
+Number:Temperature   SwitchBotCucina_Temperatura    "Cucina - temperatura [%.1f °C]"         <temperature>      (gSwitchBot, gStorico, gGrafTemperatureCasa) { channel="mqtt:topic:mosquitto:switchbot_cucina:temperatura", unit="°C" }
+Number:Dimensionless SwitchBotCucina_Umidita        "Cucina - umidità [%.0f %%]"             <humidity>         (gSwitchBot, gStorico, gGrafUmiditaCasa) { channel="mqtt:topic:mosquitto:switchbot_cucina:umidita", unit="%" }
 Number:Dimensionless SwitchBotCucina_Batteria       "Cucina - batteria sensore [%.0f %%]"    <battery>          (gSwitchBot, gStorico) { channel="mqtt:topic:mosquitto:switchbot_cucina:batteria", unit="%" }
 Number               SwitchBotCucina_RSSI           "Cucina - segnale sensore [%d dBm]"      <qualityofservice> (gSwitchBot)           { channel="mqtt:topic:mosquitto:switchbot_cucina:rssi" }
 DateTime             SwitchBotCucina_UltimoAnnuncio "Cucina - ultimo annuncio [%1$td/%1$tm %1$tH:%1$tM]" <time> (gSwitchBot)     { channel="mqtt:topic:mosquitto:switchbot_cucina:visto" }
 
 // --- Balcone (Indoor/Outdoor) --------------------------------------------------
-Number:Temperature   SwitchBotBalcone_Temperatura    "Balcone - temperatura esterna [%.1f °C]" <temperature>    (gSwitchBot, gStorico) { channel="mqtt:topic:mosquitto:switchbot_balcone:temperatura", unit="°C" }
-Number:Dimensionless SwitchBotBalcone_Umidita        "Balcone - umidità esterna [%.0f %%]"     <humidity>       (gSwitchBot, gStorico) { channel="mqtt:topic:mosquitto:switchbot_balcone:umidita", unit="%" }
+Number:Temperature   SwitchBotBalcone_Temperatura    "Balcone - temperatura esterna [%.1f °C]" <temperature>    (gSwitchBot, gStorico, gGrafTemperatureCasa) { channel="mqtt:topic:mosquitto:switchbot_balcone:temperatura", unit="°C" }
+Number:Dimensionless SwitchBotBalcone_Umidita        "Balcone - umidità esterna [%.0f %%]"     <humidity>       (gSwitchBot, gStorico, gGrafUmiditaCasa) { channel="mqtt:topic:mosquitto:switchbot_balcone:umidita", unit="%" }
 Number:Dimensionless SwitchBotBalcone_Batteria       "Balcone - batteria sensore [%.0f %%]"    <battery>        (gSwitchBot, gStorico) { channel="mqtt:topic:mosquitto:switchbot_balcone:batteria", unit="%" }
 Number               SwitchBotBalcone_RSSI           "Balcone - segnale sensore [%d dBm]"      <qualityofservice> (gSwitchBot)         { channel="mqtt:topic:mosquitto:switchbot_balcone:rssi" }
 DateTime             SwitchBotBalcone_UltimoAnnuncio "Balcone - ultimo annuncio [%1$td/%1$tm %1$tH:%1$tM]" <time> (gSwitchBot)   { channel="mqtt:topic:mosquitto:switchbot_balcone:visto" }
