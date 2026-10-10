@@ -66,4 +66,5 @@ Prova dal Pi: `mosquitto_sub -h 127.0.0.1 -p 1884 -v -t '#' -W 60`.
 - Tutti i file di testo hanno fine riga LF (vedi `.gitattributes`). Gli script `.sh` si lanciano con `bash`, quindi il bit di esecuzione non è indispensabile.
 - Nel repo non vanno segreti: password, token, chiavi e archivi di backup sono esclusi da `.gitignore`.
 - Le password MQTT stanno solo sul Pi, in `/etc/mosquitto/passwd` (hash), e nel gestore di password.
+- **Eccezione:** i Thing di tado (binding HomeKit) si creano dalla Inbox della UI e stanno nel jsondb di openHAB, compreso nel backup. Il binding sconsiglia i Thing da file perché gli id dei canali si conoscono solo dopo la scoperta. Nel repo c'è solo `openhab/items/tado.items`.
 - `/etc/openhab/services/runtime.cfg` non è gestito dal repo. Contiene `org.apache.karaf.shell:sshHost = 127.0.0.1`, la console di openHAB solo locale: non riportarlo a `0.0.0.0`.

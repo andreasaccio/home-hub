@@ -1,0 +1,21 @@
+// tado letto in locale via HomeKit (binding homekit), senza cloud.
+// ECCEZIONE al "tutto in git": i Thing sono stati creati dalla Inbox della UI e
+// stanno nel jsondb di openHAB (compreso nel backup), non in things/:
+//   bridge     homekit:bridge:9a7bc8b8506a              "tado Internet Bridge" (.8)
+//   termostato homekit:bridged-accessory:9a7bc8b8506a:2 "Tado Termostato Sala"
+// Le chiavi di abbinamento stanno in HomekitKeyStore (jsondb).
+// I numeri in coda ai canali (-12, -13...) sono gli identificativi HomeKit delle
+// caratteristiche: se il bridge viene riabbinato o sostituito vanno ricontrollati.
+//
+// Per ora solo lettura: temperatura impostata e modo hanno readOnly, cosi' dalla
+// UI non si cambia il termostato per sbaglio. Si comanda dall'app tado.
+// "Riscaldamento ora" e' una stringa (OFF/HEAT): rrd4j non la storicizza; lo
+// storico delle richieste di calore c'e' gia' in Caldaia_RichiestaTado (Shelly).
+
+Group gTado "tado"
+
+Number:Temperature   Tado_Sala_Temperatura   "Sala - temperatura (tado) [%.1f °C]"           <temperature> (gTado, gStorico) { channel="homekit:bridged-accessory:9a7bc8b8506a:2:thermostat#temperature-current-14", unit="°C" }
+Number:Temperature   Tado_Sala_Impostata     "Sala - temperatura impostata (tado) [%.1f °C]" <heating>     (gTado, gStorico) { channel="homekit:bridged-accessory:9a7bc8b8506a:2:thermostat#temperature-target-15", unit="°C", stateDescription=""[pattern="%.1f °C", readOnly=true] }
+Number:Dimensionless Tado_Sala_Umidita       "Sala - umidità (tado) [%.0f %%]"               <humidity>    (gTado, gStorico) { channel="homekit:bridged-accessory:9a7bc8b8506a:2:thermostat#relative-humidity-current-17", unit="%" }
+String               Tado_Sala_Riscaldamento "Sala - riscaldamento ora (tado) [%s]"          <fire>        (gTado)           { channel="homekit:bridged-accessory:9a7bc8b8506a:2:thermostat#heating-cooling-current-12" }
+String               Tado_Sala_Modo          "Sala - modo (tado) [%s]"                       <heating>     (gTado)           { channel="homekit:bridged-accessory:9a7bc8b8506a:2:thermostat#heating-cooling-target-13", stateDescription=""[pattern="%s", readOnly=true] }
