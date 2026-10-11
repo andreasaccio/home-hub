@@ -39,4 +39,13 @@ Bridge mqtt:broker:mosquitto "Mosquitto (Home Hub)" [ host="127.0.0.1", port=188
         Type number   : rssi        "RSSI"            [ stateTopic="switchbot/balcone/rssi" ]
         Type datetime : visto       "Ultimo annuncio" [ stateTopic="switchbot/balcone/last_seen" ]
     }
+
+    // Esito del backup notturno, pubblicato (retained) da backup/homehub-backup-auto.sh
+    Thing topic homehub_backup "Backup notturno"
+    {
+    Channels:
+        Type string   : stato     "Stato"           [ stateTopic="homehub/backup/status" ]
+        Type datetime : ultimo    "Ultimo riuscito" [ stateTopic="homehub/backup/last_ok" ]
+        Type string   : messaggio "Messaggio"       [ stateTopic="homehub/backup/message" ]
+    }
 }

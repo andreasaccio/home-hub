@@ -25,6 +25,8 @@ Piano e stato dei lavori: documento di progetto `claude/home-hub-piano.md` (prog
 | `kiosk/` | Chiosco sulla TV: `kiosk.service` (cage + Chromium su tty1), `kiosk-browser.sh`, `pam-kiosk` |
 | `install/setup-kiosk.sh` | Installa il chiosco e fissa l'uscita HDMI a 1920x1080; `--stop` lo disattiva |
 | `tools/` | Script di servizio: ricognizione, backup cifrato, ripristino VPN |
+| `backup/` | Backup notturno: `homehub-backup-auto.sh`, `.service`, `.timer`, `backup.conf`, chiave **pubblica** gpg `homehub-backup.pub.asc` |
+| `install/setup-backup.sh` | Installa il backup notturno e prova il collegamento al Synology; `--prova` fa subito un backup |
 | `system/` | Drop-in systemd installati a mano (copia di riferimento): `openvpn@server.service.d/logdir.conf` ricrea `/var/log/openvpn`, che su openHABian sta in zram e si svuota a ogni riavvio |
 
 ## Flusso di lavoro
@@ -73,6 +75,22 @@ Prova dal Pi: `mosquitto_sub -h 127.0.0.1 -p 1884 -v -t '#' -W 60`.
   il sensore esterno (Item `SwitchBotBalcone_*`). Colore: grigio a 20 °C, blu sotto, rosso sopra.
   Quando arrivano le testine tado: aggiungere i loro Item in testa a `temperatura`,
   `umidita` e in `riscalda`/`impostata` della stanza.
+
+## Backup notturno
+
+- Ogni notte alle 4:23 `homehub-backup.service` crea l'archivio (configurazione, OpenVPN con la CA,
+  openHAB con lo storico rrd4j, copia di history.db, home di openhabian) e lo cifra con la
+  chiave **pubblica** gpg: il Pi puo' cifrare ma non decifrare.
+- Conservazione: l'ultimo di ciascuno degli ultimi 14 giorni, 8 settimane e 12 mesi, in
+  `/var/backups/homehub`, copiato con rsync via SSH su `192.168.133.194:/volume1/homehub-backup`
+  (utente `homehub-backup`, solo quella cartella). Cloud Sync del Synology la carica su OneDrive.
+- Esito su MQTT (`homehub/backup/status`, `last_ok`, `message`): Item `Backup_*`, pagina
+  Dispositivi della sitemap, avviso sulla pagina TV se l'ultimo riuscito ha piu' di 36 ore.
+- La chiave **privata** e la sua passphrase stanno solo nel password manager (e nel portachiavi
+  gpg di WSL sul Surface). Mai nel repo, mai su OneDrive, mai sul Pi.
+- Decifrare (sul Surface, in WSL): `gpg -o backup.tar.gz -d homehub-backup-AAAAMMGG-HHMM.tar.gz.gpg`.
+  Per ripristinare la VPN si passa il `.tar.gz` a `tools/homehub-restore-vpn.sh`.
+- A mano: `sudo systemctl start homehub-backup` e `journalctl -u homehub-backup -n 30`.
 
 ## Storico di Camper Hub
 

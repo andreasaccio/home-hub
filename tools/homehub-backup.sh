@@ -6,6 +6,7 @@
 #         tls-crypt), regole firewall e servizio che le ricarica, sysctl,
 #         configurazione openHAB (openhab-cli backup + copia diretta),
 #         openHABian, rete, SSH (chiavi host), Samba, crontab, file .ovpn,
+#         storico rrd4j dei grafici, copia di history.db del camper,
 #         elenco pacchetti e stato di rete.
 # Non fa: niente stop di servizi, niente modifiche di configurazione.
 # Output: ~/homehub-backup-<data>.tar.gz.gpg  cifrato AES256 con passphrase
@@ -16,30 +17,49 @@
 #
 # Uso:  sudo bash homehub-backup.sh            archivio cifrato (chiede la passphrase)
 #       sudo bash homehub-backup.sh --plain    archivio NON cifrato (solo per test)
+#       sudo bash homehub-backup.sh --auto     senza domande, per il backup notturno:
+#            cifrato con la chiave pubblica /etc/homehub/backup-pubkey.asc (si
+#            decifra solo con la chiave privata, che sul Pi non c'e'), scritto in
+#            /var/backups/homehub; esce con errore se qualcosa non torna.
 # =============================================================================
 
 set -u
 export LC_ALL=C
 
 PLAIN=0
+AUTO=0
 case "${1:-}" in
   --plain) PLAIN=1 ;;
+  --auto)  AUTO=1 ;;
   "") ;;
-  -h|--help) sed -n '2,20p' "$0"; exit 0 ;;
+  -h|--help) sed -n '2,25p' "$0"; exit 0 ;;
   *) echo "Opzione sconosciuta: $1" >&2; exit 2 ;;
 esac
 
-[ "$(id -u)" -eq 0 ] || { echo "Va lanciato con sudo: sudo bash $0 [--plain]" >&2; exit 1; }
+[ "$(id -u)" -eq 0 ] || { echo "Va lanciato con sudo: sudo bash $0 [--plain|--auto]" >&2; exit 1; }
 
 TS=$(date +%Y%m%d-%H%M)
-OWNER=${SUDO_USER:-root}
-OWNER_HOME=$(getent passwd "$OWNER" | cut -d: -f6)
-OWNER_HOME=${OWNER_HOME:-/root}
+PUBKEY=/etc/homehub/backup-pubkey.asc
+# OWNER_HOME: home salvata nell'archivio (repo, chiavi SSH, token); DEST: dove
+# finisce l'archivio. Nel backup notturno la home e' quella di openhabian.
+if [ "$AUTO" -eq 1 ]; then
+  [ -s "$PUBKEY" ] || { echo "Chiave pubblica assente: $PUBKEY (install/setup-backup.sh)" >&2; exit 1; }
+  OWNER=root
+  OWNER_HOME=$(getent passwd openhabian | cut -d: -f6)
+  OWNER_HOME=${OWNER_HOME:-/home/openhabian}
+  DEST=/var/backups/homehub
+  install -d -m 700 "$DEST"
+else
+  OWNER=${SUDO_USER:-root}
+  OWNER_HOME=$(getent passwd "$OWNER" | cut -d: -f6)
+  OWNER_HOME=${OWNER_HOME:-/root}
+  DEST=$OWNER_HOME
+fi
 NAME="homehub-backup-$TS"
 WORK=$(mktemp -d /var/tmp/hhbk.XXXXXX)
 STAGE="$WORK/$NAME"
 TARBALL="$WORK/$NAME.tar.gz"
-MANIFEST="$OWNER_HOME/$NAME.manifest.txt"
+MANIFEST="$DEST/$NAME.manifest.txt"
 trap 'rm -rf "$WORK"' EXIT
 umask 077
 mkdir -p "$STAGE/_info"
@@ -48,7 +68,7 @@ log()  { printf '  - %s\n' "$*"; }
 warn() { printf '  ! %s\n' "$*" >&2; }
 
 # --- passphrase subito, cosi' poi lo script lavora da solo -------------------
-if [ "$PLAIN" -eq 0 ]; then
+if [ "$PLAIN" -eq 0 ] && [ "$AUTO" -eq 0 ]; then
   command -v gpg >/dev/null || { echo "gpg assente: installa gnupg oppure usa --plain" >&2; exit 1; }
   read -r -s -p "Passphrase per cifrare il backup: " PASS1; echo
   read -r -s -p "Ripeti la passphrase: " PASS2; echo
@@ -98,6 +118,8 @@ CANDIDATES=(
   /var/lib/openhab/jsondb /var/lib/openhab/config /var/lib/openhab/etc /var/lib/openhab/secrets
   /etc/mosquitto
   /var/lib/homehub
+  /var/lib/openhab/persistence
+  /etc/homehub /root/.ssh
   /etc/systemd/system/camper-sync.service /etc/systemd/system/camper-sync.timer
   /etc/NetworkManager/system-connections
   /etc/ssh
@@ -141,10 +163,29 @@ for must in etc/openvpn/server.conf etc/openvpn/ca.crt etc/openvpn/tls-crypt.key
   grep -q "^$must" "$WORK/list.txt" || { warn "MANCA nell'archivio: /$must"; MISSING=1; }
 done
 log "verifica: $(wc -l <"$WORK/list.txt") voci, pezzi critici OpenVPN $([ $MISSING -eq 0 ] && echo presenti || echo INCOMPLETI)"
+if [ "$AUTO" -eq 1 ] && [ "$MISSING" -ne 0 ]; then
+  echo "Archivio incompleto: backup notturno interrotto." >&2; exit 1
+fi
 
 # --- 5. cifratura -------------------------------------------------------------
-if [ "$PLAIN" -eq 0 ]; then
-  OUT="$OWNER_HOME/$NAME.tar.gz.gpg"
+if [ "$AUTO" -eq 1 ]; then
+  OUT="$DEST/$NAME.tar.gz.gpg"
+  log "cifratura con la chiave pubblica"
+  GH=$(mktemp -d "$WORK/gnupg.XXXXXX")   # portachiavi temporaneo: niente da conservare sul Pi
+  if ! GNUPGHOME="$GH" gpg --batch --yes --quiet --trust-model always \
+         --recipient-file "$PUBKEY" --encrypt -o "$OUT" "$TARBALL"; then
+    rm -f "$OUT"; echo "Cifratura fallita." >&2; exit 1
+  fi
+  # il Pi non puo' decifrare (e' il punto): si controlla che il file sia
+  # davvero cifrato per la chiave giusta
+  KEYID=$(GNUPGHOME="$GH" gpg --batch --with-colons --show-keys "$PUBKEY" 2>/dev/null | awk -F: '$1=="sub" && $12 ~ /e/ {print $5; exit}')
+  if GNUPGHOME="$GH" gpg --batch --list-packets "$OUT" 2>&1 | grep -q "pubkey enc packet.*keyid $KEYID"; then
+    log "cifrato per la chiave $KEYID: ok"
+  else
+    rm -f "$OUT"; echo "Il file cifrato non risulta destinato alla chiave $KEYID." >&2; exit 1
+  fi
+elif [ "$PLAIN" -eq 0 ]; then
+  OUT="$DEST/$NAME.tar.gz.gpg"
   log "cifratura AES256"
   if ! gpg --batch --yes --pinentry-mode loopback --passphrase-fd 3 \
            --symmetric --cipher-algo AES256 -o "$OUT" "$TARBALL" 3<<<"$PASS1"; then
@@ -159,7 +200,7 @@ if [ "$PLAIN" -eq 0 ]; then
   fi
   unset PASS1
 else
-  OUT="$OWNER_HOME/$NAME.tar.gz"
+  OUT="$DEST/$NAME.tar.gz"
   cp "$TARBALL" "$OUT"
   warn "archivio NON cifrato: contiene la chiave privata della CA OpenVPN"
 fi
@@ -175,6 +216,11 @@ fi
   sed 's/^/  /' "$WORK/list.txt"
 } >"$MANIFEST"
 chown "$OWNER" "$OUT" "$MANIFEST" 2>/dev/null
+
+if [ "$AUTO" -eq 1 ]; then
+  echo "OK $OUT ($(du -h "$OUT" | cut -f1))"
+  exit 0
+fi
 
 cat <<EOF
 

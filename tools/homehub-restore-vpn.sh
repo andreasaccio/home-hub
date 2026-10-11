@@ -66,7 +66,7 @@ case "$ARCHIVE" in
       | tar -xzf - -C "$STAGE" --wildcards "${PATTERNS[@]}" 2>"$STAGE/tar.err"
     rcs=("${PIPESTATUS[@]}")
     unset PASS
-    [ "${rcs[0]}" -eq 0 ] || die "decifratura fallita (passphrase errata?): $(head -n 3 "$STAGE/gpg.err")"
+    [ "${rcs[0]}" -eq 0 ] || die "decifratura fallita (passphrase errata? un backup notturno e' cifrato con la chiave pubblica: decifralo sul Surface con gpg -d e passa qui il .tar.gz): $(head -n 3 "$STAGE/gpg.err")"
     ;;
   *.tar.gz|*.tgz)
     tar -xzf "$ARCHIVE" -C "$STAGE" --wildcards "${PATTERNS[@]}" 2>"$STAGE/tar.err"

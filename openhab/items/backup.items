@@ -1,0 +1,8 @@
+// Backup notturno cifrato (backup/homehub-backup-auto.sh) - Thing in things/mqtt.things
+// La pagina TV avvisa se l'ultimo backup riuscito e' piu' vecchio di 36 ore.
+
+Group gBackup "Backup"
+
+String   Backup_Stato     "Backup - stato [%s]"                                <shield> (gBackup) { channel="mqtt:topic:mosquitto:homehub_backup:stato", stateDescription=""[options="ok=riuscito,errore=non riuscito,in_corso=in corso", readOnly=true] }
+DateTime Backup_UltimoOk  "Backup - ultimo riuscito [%1$td/%1$tm %1$tH:%1$tM]" <time>   (gBackup) { channel="mqtt:topic:mosquitto:homehub_backup:ultimo" }
+String   Backup_Messaggio "Backup - dettaglio [%s]"                            <text>   (gBackup) { channel="mqtt:topic:mosquitto:homehub_backup:messaggio" }

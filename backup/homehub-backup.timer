@@ -1,0 +1,13 @@
+# Ogni notte alle 4:23 (dopo la copia di history.db delle 3:17).
+# Persistent: se il Pi era spento, il backup parte all'avvio.
+
+[Unit]
+Description=Home Hub: backup notturno
+
+[Timer]
+OnCalendar=*-*-* 04:23
+RandomizedDelaySec=10min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

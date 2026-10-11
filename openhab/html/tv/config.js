@@ -81,6 +81,7 @@ window.TV_CONFIG = {
     sensoreMuto: 30,                // minuti senza annunci Bluetooth
     camperBatteriaAttenzione: 30,   // %
     camperBatteriaCritica: 15,      // %
-    camperDatiVecchi: 10            // minuti senza dati -> camper non raggiungibile
+    camperDatiVecchi: 10,           // minuti senza dati -> camper non raggiungibile
+    backupOre: 36                   // ore dall'ultimo backup riuscito prima dell'avviso
   }
 };

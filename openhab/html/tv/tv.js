@@ -409,6 +409,9 @@
       if (d && Date.now() - d.getTime() > A.sensoreMuto * 60e3) L.push(["warning", s.nome + ": nessun dato dalle " + hhmm.format(d)]);
     });
     if (str("SonoffSala_Online") === "OFF") L.push(["warning", "Sonoff sala non collegato"]);
+    var bk = when("Backup_UltimoOk");     // nessun avviso finche' il backup notturno non e' attivo
+    if (str("Backup_Stato") === "errore") L.push(["warning", "Backup notturno non riuscito"]);
+    else if (bk && Date.now() - bk.getTime() > A.backupOre * 3600e3) L.push(["warning", "Ultimo backup riuscito: " + giorno.format(bk)]);
 
     var ord = { critical: 0, warning: 1 };
     L.sort(function (a, b) { return ord[a[0]] - ord[b[0]]; });

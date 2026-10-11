@@ -1,0 +1,14 @@
+# Backup notturno cifrato del Home Hub, copiato sul Synology (e da li' su OneDrive).
+# Installato da install/setup-backup.sh. Log: journalctl -u homehub-backup
+
+[Unit]
+Description=Home Hub: backup notturno cifrato sul Synology
+Wants=network-online.target
+After=network-online.target mosquitto.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/lib/homehub/homehub-backup-auto.sh
+Nice=10
+IOSchedulingClass=idle
+TimeoutStartSec=1h

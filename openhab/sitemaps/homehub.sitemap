@@ -82,6 +82,11 @@ sitemap homehub label="Home Hub" {
                 Text item=SwitchBotCucina_UltimoAnnuncio
                 Text item=SwitchBotBalcone_UltimoAnnuncio
             }
+            Frame label="Backup notturno" {
+                Text item=Backup_Stato
+                Text item=Backup_UltimoOk
+                Text item=Backup_Messaggio
+            }
             Frame label="Clima sala (Shelly)" {
                 Text item=ClimaSala_Rele
                 Text item=ClimaSala_Ingresso
