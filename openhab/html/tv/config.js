@@ -10,13 +10,15 @@ window.TV_CONFIG = {
   // quando arrivano le testine tado basta metterle in testa all'elenco.
   //   riscalda:  Item che vale 1 (o ON) quando la stanza chiede calore
   //   impostata: temperatura richiesta (tado)
-  //   esterno:   balcone e simili (solo contorno, niente riscaldamento)
+  //   esterno:   terrazzo e simili (solo contorno, niente riscaldamento)
   //   transito:  ingresso, disimpegno: solo il nome
   //   area:      rettangolo sulla pianta { x, y, w, h } in unita' della pianta, oppure
   //              { rettangoli: [...], testo: {...} } per una stanza a L
   //   note:      letture di altri sensori scritte in un punto della stanza
-  // Pianta ricavata dal progetto (foto del 10/10/2026), ruotata con il nord in
-  // alto: balcone a est (destra), ingresso a ovest. 1 unita' = circa 1,2 cm.
+  // Pianta ricavata dal progetto (foto del 10/10/2026), girata di 90 gradi per
+  // stare nello schermo: il nord e' a sinistra, l'est in alto. La fascia a destra
+  // e' la veranda (sul progetto "tettoia", chiusa e riscaldata) e il terrazzo
+  // scoperto, piu' piccolo, lato bagno a est. 1 unita' = circa 1,2 cm.
   stanze: [
     { id: "camera", nome: "Camera",
       temperatura: [], umidita: [],
@@ -41,15 +43,22 @@ window.TV_CONFIG = {
     { id: "luca", nome: "Camera di Luca",
       temperatura: [], umidita: [],
       area: { x: 18, y: 543, w: 328, h: 167 } },
-    { id: "balcone", nome: "Balcone", esterno: true,
+    // la "tettoia" del progetto, chiusa: riscaldata, avra' una testina tado
+    { id: "veranda", nome: "Veranda",
+      temperatura: [], umidita: [],
+      area: { x: 842, y: 178, w: 236, h: 512 } },
+    // la "terrazza" del progetto: scoperta, c'e' il sensore esterno
+    // (gli Item si chiamano ancora SwitchBotBalcone_*: il nome tiene lo storico)
+    { id: "terrazzo", nome: "Terrazzo", esterno: true,
       temperatura: ["SwitchBotBalcone_Temperatura"],
       umidita: ["SwitchBotBalcone_Umidita"],
-      area: { x: 842, y: 15, w: 236, h: 675 } }
+      area: { x: 842, y: 15, w: 236, h: 155 } }
   ],
 
-  // Dimensioni della pianta (unita' della pianta) e posizione della bussola.
+  // Dimensioni della pianta (unita' della pianta) e bussola: posizione e
+  // direzione del nord in gradi (0 = in alto, -90 = a sinistra).
   // pianta: null disegna le stanze come riquadri in griglia.
-  pianta: { larghezza: 1090, altezza: 770, nord: [60, 70] },
+  pianta: { larghezza: 1090, altezza: 770, nord: { x: 90, y: 80, angolo: -90 } },
 
   // Corrente delle batterie del camper: positiva = in carica (da verificare
   // la prima volta che il camper e' fermo senza 230 V: deve risultare "in uso").
@@ -59,7 +68,7 @@ window.TV_CONFIG = {
   avvisi: {
     batterieSensori: [
       { item: "SwitchBotCucina_Batteria",    nome: "sensore cucina" },
-      { item: "SwitchBotBalcone_Batteria",   nome: "sensore balcone" },
+      { item: "SwitchBotBalcone_Batteria",   nome: "sensore terrazzo" },
       { item: "Camper_LeoTemp_Batteria",     nome: "sensore LeoTemp (camper)" },
       { item: "Camper_Frigo_Batteria",       nome: "sensore frigo (camper)" },
       { item: "Camper_Allagamento_Batteria", nome: "sensore allagamento (camper)" }
@@ -67,7 +76,7 @@ window.TV_CONFIG = {
     sogliaBatteriaSensore: 20,      // %
     sensoriVisti: [
       { item: "SwitchBotCucina_UltimoAnnuncio",  nome: "Sensore cucina" },
-      { item: "SwitchBotBalcone_UltimoAnnuncio", nome: "Sensore balcone" }
+      { item: "SwitchBotBalcone_UltimoAnnuncio", nome: "Sensore terrazzo" }
     ],
     sensoreMuto: 30,                // minuti senza annunci Bluetooth
     camperBatteriaAttenzione: 30,   // %

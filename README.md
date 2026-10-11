@@ -68,7 +68,9 @@ Prova dal Pi: `mosquitto_sub -h 127.0.0.1 -p 1884 -v -t '#' -W 60`.
 - Sul Pi la apre il servizio `kiosk` (Chromium a schermo intero sull'HDMI). Dopo un deploy
   la pagina si ricarica da sola entro un minuto. `sudo systemctl restart kiosk` la riapre.
 - Mappa: stanze e rettangoli in `openhab/html/tv/config.js`, ricavati dalla pianta di progetto
-  con il nord in alto (balcone a est). Colore: grigio a 20 °C, blu sotto, rosso sopra.
+  girata di 90 gradi (nord a sinistra, est in alto). La fascia a destra e' la veranda (sul
+  progetto "tettoia", chiusa e riscaldata) e il terrazzo scoperto lato bagno, piu' piccolo, con
+  il sensore esterno (Item `SwitchBotBalcone_*`). Colore: grigio a 20 °C, blu sotto, rosso sopra.
   Quando arrivano le testine tado: aggiungere i loro Item in testa a `temperatura`,
   `umidita` e in `riscalda`/`impostata` della stanza.
 

@@ -223,13 +223,14 @@
       } else if (ampio) heatRiga = true;
       else fiamma(g, x + (largo(st.nome, fN) + 8) * k, y - 22 * k, 26, k);
     }
-    var fT = Math.max(32, Math.min(64, avail / 2.7));
+    var fS = ampio ? 22 : 20;
+    // temperatura grande quanto la stanza permette, lasciando posto a una riga sotto
+    var fT = Math.max(32, Math.min(64, avail / 2.7, hpx - pad - fN - 6 - (fS + 10) - 8));
     y += (fT + 6) * k;
     testo(g, gradi(d.t), x, y, fT, k, "room-temp");
     var righe = [];
     if (d.u != null) righe.push(["umidità " + nf0.format(d.u) + " %", nf0.format(d.u) + " %"]);
     if (d.imp != null) righe.push(["richiesta " + gradi(d.imp), "→ " + gradi(d.imp)]);
-    var fS = ampio ? 22 : 20;
     if (ampio && righe.length === 2 && largo(righe[0][0] + " · " + righe[1][0], fS) <= avail) righe = [[righe[0][0] + " · " + righe[1][0]]];
     righe.forEach(function (r) {
       var t = largo(r[0], fS) <= avail ? r[0] : r[r.length - 1];
@@ -265,9 +266,10 @@
   }
 
   function bussola(svg, P, k) {
-    var x = P.nord[0], y = P.nord[1];
-    svgEl("path", { d: "M" + x + " " + (y - 30 * k) + "L" + (x + 12 * k) + " " + (y + 4 * k) + "L" + x + " " + (y - 4 * k) + "L" + (x - 12 * k) + " " + (y + 4 * k) + "Z", fill: "#c3c2b7" }, svg);
-    testo(svg, "N", x, y + 30 * k, 22, k, "room-sub", "middle");
+    var n = P.nord, a = (n.angolo || 0) * Math.PI / 180;
+    var g = svgEl("g", { transform: "translate(" + n.x + "," + n.y + ") rotate(" + (n.angolo || 0) + ")" }, svg);
+    svgEl("path", { d: "M0 " + (-22 * k) + "L" + (12 * k) + " " + (14 * k) + "L0 " + (6 * k) + "L" + (-12 * k) + " " + (14 * k) + "Z", fill: "#c3c2b7" }, g);
+    testo(svg, "N", n.x + Math.sin(a) * 44 * k, n.y - Math.cos(a) * 44 * k + 8 * k, 22, k, "room-sub", "middle");
   }
 
   function mappa() {
