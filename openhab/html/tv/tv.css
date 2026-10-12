@@ -109,6 +109,9 @@ h2 { margin: 0; font-size: 28px; font-weight: 600; letter-spacing: -0.01em; }
 .meter .fill.critical { background: var(--critical); }
 .b-info { font-size: 22px; color: var(--ink-2); margin: 14px 0 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .b-info b { color: var(--ink); font-weight: 600; }
+/* corrente delle batterie: verde in carica, rossa in scarica */
+.b-info .corrente.carica, .b-info .corrente.carica b   { color: #2fb84a; }
+.b-info .corrente.scarica, .b-info .corrente.scarica b { color: #e66767; }
 
 .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--grid); }
 .stat { min-width: 0; }

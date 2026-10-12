@@ -374,8 +374,10 @@
     var a = num("Camper_Batt_Corrente"), info = [];
     if (a != null) {
       var carica = C.camperCorrentePositivaInCarica ? a : -a;
-      var verso = carica > 0.2 ? "in carica" : carica < -0.2 ? "in uso" : "a riposo";
-      info.push("<b>" + (a > 0 ? "+" : "") + nf1.format(a) + " A</b> " + verso);
+      // verde in carica, rosso in scarica (il testo dice comunque quale dei due)
+      var cl = carica > 0.2 ? "carica" : carica < -0.2 ? "scarica" : "";
+      var verso = cl === "carica" ? "in carica" : cl === "scarica" ? "in scarica" : "a riposo";
+      info.push('<span class="corrente ' + cl + '"><b>' + (a > 0 ? "+" : "") + nf1.format(a) + " A</b> " + verso + "</span>");
     }
     var uso = str("Camper_Batt_InUso"); if (uso) info.push("in uso: " + esc(uso));
     var aut = str("Camper_Batt_Autonomia"); if (aut) info.push("autonomia: " + esc(aut));
@@ -435,13 +437,22 @@
   function disegna() { casa(); camper(); mappa(); avvisi(); }
 
   // --- ricarica automatica dopo un deploy ------------------------------------------------
+  // Si confronta il contenuto dei file (una piccola impronta), non le intestazioni
+  // HTTP: il server statico di openHAB non le cambia in modo affidabile e la TV
+  // restava sulla versione vecchia. Sono pochi KB in locale, una volta al minuto.
   var firma = null;
+  function impronta(t) {
+    var h = 0;
+    for (var i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) | 0;
+    return t.length + ":" + h;
+  }
   function controllaFile() {
     if (DEMO || location.protocol === "file:") return;
     Promise.all(["index.html", "tv.css", "tv.js", "config.js"].map(function (f) {
-      return fetch(f, { method: "HEAD", cache: "no-store" }).then(function (r) {
-        return (r.headers.get("last-modified") || "") + (r.headers.get("etag") || "") + (r.headers.get("content-length") || "");
-      });
+      return fetch(f, { cache: "no-store" }).then(function (r) {
+        if (!r.ok) throw new Error(f + " " + r.status);
+        return r.text();
+      }).then(impronta);
     })).then(function (a) {
       var f = a.join("|");
       if (firma && f !== firma) location.reload();
