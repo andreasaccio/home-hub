@@ -7,6 +7,8 @@
 #   - kiosk/kiosk-browser.sh -> /usr/local/lib/homehub/
 #   - kiosk/pam-kiosk        -> /etc/pam.d/kiosk
 #   - kiosk/kiosk.service    -> /etc/systemd/system/  (prende il posto di tty1)
+#   - driver grafico KMS (dtoverlay=vc4-kms-v3d) e gpu_mem >= 64 in config.txt:
+#     openHABian li toglie perche' nasce senza schermo; serve un riavvio
 #   - uscita HDMI fissa a 1920x1080: parametro video= in /boot/firmware/cmdline.txt
 #     (la TV porta l'immagine a 4K; in 4K il browser del Pi 4 sarebbe lento)
 #
@@ -38,14 +40,34 @@ RIAVVIO=0
 
 echo "--- grafica del Pi"
 tr -d '\0' </proc/device-tree/model 2>/dev/null | sed 's/^/    /'; echo
+# openHABian, pensato senza schermo, toglie il driver grafico KMS e riduce la
+# memoria della GPU a 16 MB: per il browser servono entrambi. Si sistemano qui
+# (con copia di config.txt) e si chiede un riavvio.
+if ! grep -qE '^[[:space:]]*dtoverlay=vc4-kms-v3d' "$CONFIG"; then
+  mkdir -p "$BK"; cp -a "$CONFIG" "$BK/"
+  printf '\n[all]\n# Home Hub: driver grafico KMS per la pagina sulla TV (install/setup-kiosk.sh)\ndtoverlay=vc4-kms-v3d\nmax_framebuffers=2\n' >>"$CONFIG"
+  echo "    aggiunto dtoverlay=vc4-kms-v3d in $CONFIG"
+  RIAVVIO=1
+fi
+if grep -qE '^[[:space:]]*gpu_mem=([0-9]|[1-5][0-9]|6[0-3])[[:space:]]*$' "$CONFIG"; then
+  mkdir -p "$BK"; [ -f "$BK/config.txt" ] || cp -a "$CONFIG" "$BK/"
+  sed -i -E 's/^([[:space:]]*)gpu_mem=([0-9]|[1-5][0-9]|6[0-3])[[:space:]]*$/\1gpu_mem=64/' "$CONFIG"
+  echo "    gpu_mem portato a 64 MB in $CONFIG"
+  RIAVVIO=1
+fi
+grep -nE '^[[:space:]]*(dtoverlay=vc4|gpu_mem|max_framebuffers|disable_fw_kms|hdmi_)' "$CONFIG" | sed 's/^/    config.txt:/' || true
+if [ "$RIAVVIO" -eq 1 ]; then
+  [ -d "$BK" ] && echo "    config.txt originale salvato in $BK"
+  echo
+  echo "Riavvia (sudo reboot) e rilancia questo script: dopo il riavvio deve esistere /dev/dri."
+  exit 0
+fi
 if ls /dev/dri/card* >/dev/null 2>&1; then
   echo "    driver KMS presente: $(cd /dev/dri && echo *)"
 else
-  echo "    ERRORE: /dev/dri assente. In $CONFIG serve dtoverlay=vc4-kms-v3d" >&2
-  grep -nE '^\s*(dtoverlay=vc4|gpu_mem|hdmi_|disable_fw_kms)' "$CONFIG" 2>/dev/null | sed 's/^/      /' >&2
+  echo "ERRORE: dtoverlay=vc4-kms-v3d c'e' ma /dev/dri manca: il Pi e' stato riavviato?" >&2
   exit 1
 fi
-grep -nE '^\s*(dtoverlay=vc4|gpu_mem|max_framebuffers|hdmi_)' "$CONFIG" 2>/dev/null | sed 's/^/    config.txt:/' || true
 
 CONN=""
 for s in /sys/class/drm/card*-HDMI-A-*/status; do
@@ -53,7 +75,7 @@ for s in /sys/class/drm/card*-HDMI-A-*/status; do
   c=$(basename "$(dirname "$s")"); c=${c#card*-}
   st=$(cat "$s")
   echo "    $c: $st"
-  [ "$st" = connected ] && [ -z "$CONN" ] && CONN=$c
+  if [ "$st" = connected ] && [ -z "$CONN" ]; then CONN=$c; fi
 done
 if [ -z "$CONN" ]; then
   echo "ERRORE: nessuna TV rilevata sulle uscite HDMI. Accendi la TV (anche su un altro ingresso) e rilancia." >&2
