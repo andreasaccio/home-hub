@@ -13,6 +13,7 @@
   var H = {};          // storico: nome Item -> [{t, v}]
   var okAt = 0;        // ultimo caricamento riuscito degli stati
   var failed = false;
+  var storicoKo = false; // ultimo caricamento dello storico non riuscito (si riprova dopo 30 s)
 
   var STORICO = ["SwitchBotBalcone_Temperatura", "Rete_Potenza", "Rete_Energia",
                  "Camper_Batt1_Livello", "Camper_Batt2_Livello"];
@@ -96,16 +97,18 @@
   }
   function caricaStorico() {
     if (DEMO) { STORICO.forEach(function (n) { H[n] = demoStorico(n); }); return Promise.resolve(); }
+    var ko = false;
     return Promise.all(STORICO.map(function (n) {
       return fetch("/rest/persistence/items/" + encodeURIComponent(n) + "?serviceId=rrd4j", { cache: "no-store", headers: { Accept: "application/json" } })
-        .then(function (r) { return r.ok ? r.json() : { data: [] }; })
+        .then(function (r) { if (!r.ok) { ko = true; return { data: H[n] ? null : [] }; } return r.json(); })
         .then(function (j) {
+          if (j.data === null) return;            // errore: si tiene quello che c'era
           H[n] = (j.data || []).map(function (p) { return { t: +p.time, v: parseFloat(p.state) }; })
                                .filter(function (p) { return isFinite(p.v) && isFinite(p.t); })
                                .sort(function (a, b) { return a.t - b.t; });
         })
-        .catch(function () { H[n] = H[n] || []; });
-    }));
+        .catch(function () { ko = true; H[n] = H[n] || []; });
+    })).then(function () { storicoKo = ko; });
   }
 
   // --- grafico di andamento (una o due serie, 24 ore) ---------------------------
@@ -129,7 +132,7 @@
     });
     if (tutti.length < 2) {
       var n = svgEl("text", { x: pw / 2, y: padT + ph / 2 + 6, "text-anchor": "middle", "class": "none" }, svg);
-      n.textContent = "storico in costruzione";
+      n.textContent = storicoKo ? "storico non raggiungibile, riprovo" : "storico in costruzione";
       return;
     }
     var lo = Infinity, hi = -Infinity;
@@ -492,10 +495,14 @@
   // --- avvio ---------------------------------------------------------------------------
   addEventListener("resize", function () { adatta(); disegna(); });
   adatta(); orologio(); legenda();
-  caricaStati().then(caricaStorico).then(disegna);
+  // storico: ogni 5 minuti; se non arriva (openHAB che riparte, deploy in corso)
+  // si riprova dopo 30 secondi invece di lasciare i grafici vuoti
+  function storico() {
+    caricaStorico().then(function () { disegna(); setTimeout(storico, storicoKo ? 30e3 : 5 * 60e3); });
+  }
+  caricaStati().then(storico);
   setInterval(orologio, 5e3);
   setInterval(function () { caricaStati().then(disegna); }, 5e3);
-  setInterval(function () { caricaStorico().then(disegna); }, 5 * 60e3);
   setInterval(controllaFile, 60e3); controllaFile();
   setTimeout(function () { location.reload(); }, 6 * 3600e3);   // ogni 6 ore, per sicurezza
 })();
