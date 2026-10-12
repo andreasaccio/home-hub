@@ -21,12 +21,14 @@ sitemap homehub label="Home Hub" {
                 Text item=Tado_Sala_Temperatura
                 Text item=SonoffSala_Temperatura
                 Text item=SwitchBotCucina_Temperatura
+                Text item=Tado_Veranda_Temperatura
             }
             Frame label="Umidità" {
                 Text item=SwitchBotBalcone_Umidita
                 Text item=Tado_Sala_Umidita
                 Text item=SonoffSala_Umidita
                 Text item=SwitchBotCucina_Umidita
+                Text item=Tado_Veranda_Umidita
             }
             Frame label="Ultime 24 ore" {
                 Chart item=gGrafTemperatureCasa period=D refresh=300000 service="rrd4j"
@@ -43,6 +45,12 @@ sitemap homehub label="Home Hub" {
                 Text item=Tado_Sala_Impostata
                 Text item=Tado_Sala_Riscaldamento
                 Text item=Tado_Sala_Modo
+            }
+            Frame label="tado (veranda)" {
+                Text item=Tado_Veranda_Temperatura
+                Text item=Tado_Veranda_Impostata
+                Text item=Tado_Veranda_Riscaldamento
+                Text item=Tado_Veranda_Modo
             }
             Frame label="Caldaia (Shelly)" {
                 Text item=Caldaia_RichiestaTado

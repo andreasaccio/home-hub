@@ -3,6 +3,7 @@
 // stanno nel jsondb di openHAB (compreso nel backup), non in things/:
 //   bridge     homekit:bridge:9a7bc8b8506a              "tado Internet Bridge" (.8)
 //   termostato homekit:bridged-accessory:9a7bc8b8506a:2 "Tado Termostato Sala"
+//   testina    homekit:bridged-accessory:9a7bc8b8506a:3 "Tado Veranda" (dal 12/10/2026)
 // Le chiavi di abbinamento stanno in HomekitKeyStore (jsondb).
 // I numeri in coda ai canali (-12, -13...) sono gli identificativi HomeKit delle
 // caratteristiche: se il bridge viene riabbinato o sostituito vanno ricontrollati.
@@ -21,3 +22,10 @@ Number:Temperature   Tado_Sala_Impostata     "Sala - temperatura impostata (tado
 Number:Dimensionless Tado_Sala_Umidita       "Sala - umidità (tado) [%.0f %%]"               <humidity>    (gTado, gStorico, gGrafUmiditaCasa) { channel="homekit:bridged-accessory:9a7bc8b8506a:2:thermostat#relative-humidity-current-17", unit="%" }
 String               Tado_Sala_Riscaldamento "Sala - riscaldamento ora (tado) [%s]"          <fire>        (gTado)           { channel="homekit:bridged-accessory:9a7bc8b8506a:2:thermostat#heating-cooling-current-12", stateDescription=""[options="0=Spento,1=Riscalda,2=Raffredda", readOnly=true] }
 String               Tado_Sala_Modo          "Sala - modo (tado) [%s]"                       <heating>     (gTado)           { channel="homekit:bridged-accessory:9a7bc8b8506a:2:thermostat#heating-cooling-target-13", stateDescription=""[options="0=Spento,1=Riscaldamento,2=Raffrescamento,3=Automatico", readOnly=true] }
+
+// --- Veranda (testina sul termosifone, montata il 12/10/2026) -----------------
+Number:Temperature   Tado_Veranda_Temperatura   "Veranda - temperatura (tado) [%.1f °C]"           <temperature> (gTado, gStorico, gGrafTemperatureCasa) { channel="homekit:bridged-accessory:9a7bc8b8506a:3:thermostat#temperature-current-14", unit="°C" }
+Number:Temperature   Tado_Veranda_Impostata     "Veranda - temperatura impostata (tado) [%.1f °C]" <heating>     (gTado, gStorico) { channel="homekit:bridged-accessory:9a7bc8b8506a:3:thermostat#temperature-target-15", unit="°C", stateDescription=""[pattern="%.1f °C", readOnly=true] }
+Number:Dimensionless Tado_Veranda_Umidita       "Veranda - umidità (tado) [%.0f %%]"               <humidity>    (gTado, gStorico, gGrafUmiditaCasa) { channel="homekit:bridged-accessory:9a7bc8b8506a:3:thermostat#relative-humidity-current-17", unit="%" }
+String               Tado_Veranda_Riscaldamento "Veranda - riscaldamento ora (tado) [%s]"          <fire>        (gTado)           { channel="homekit:bridged-accessory:9a7bc8b8506a:3:thermostat#heating-cooling-current-12", stateDescription=""[options="0=Spento,1=Riscalda,2=Raffredda", readOnly=true] }
+String               Tado_Veranda_Modo          "Veranda - modo (tado) [%s]"                       <heating>     (gTado)           { channel="homekit:bridged-accessory:9a7bc8b8506a:3:thermostat#heating-cooling-target-13", stateDescription=""[options="0=Spento,1=Riscaldamento,2=Raffrescamento,3=Automatico", readOnly=true] }

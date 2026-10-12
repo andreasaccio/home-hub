@@ -31,7 +31,7 @@ window.TV_CONFIG = {
     { id: "ingresso", nome: "Ingresso", transito: true,
       area: { x: 240, y: 427, w: 266, h: 95 } },
     // sala e angolo cottura: un solo ambiente, un termosifone con testina tado
-    { id: "sala", nome: "Sala e cucina",
+    { id: "sala", nome: "Sala",
       temperatura: ["Tado_Sala_Temperatura", "SonoffSala_Temperatura", "SwitchBotCucina_Temperatura"],
       umidita: ["Tado_Sala_Umidita", "SonoffSala_Umidita", "SwitchBotCucina_Umidita"],
       impostata: "Tado_Sala_Impostata",
@@ -39,13 +39,16 @@ window.TV_CONFIG = {
       area: { rettangoli: [{ x: 514, y: 427, w: 298, h: 283 },     // soggiorno
                            { x: 362, y: 532, w: 160, h: 221 }],    // angolo cottura
               testo: { x: 514, y: 427, w: 298, h: 283 } },
-      note: [{ testo: "cucina", item: "SwitchBotCucina_Temperatura", x: 376, y: 572 }] },
+      note: [{ testo: "Cucina", item: "SwitchBotCucina_Temperatura", x: 376, y: 572 }] },
     { id: "luca", nome: "Camera di Luca",
       temperatura: [], umidita: [],
       area: { x: 18, y: 543, w: 328, h: 167 } },
-    // la "tettoia" del progetto, chiusa: riscaldata, avra' una testina tado
+    // la "tettoia" del progetto, chiusa e riscaldata: testina tado dal 12/10/2026
     { id: "veranda", nome: "Veranda",
-      temperatura: [], umidita: [],
+      temperatura: ["Tado_Veranda_Temperatura"],
+      umidita: ["Tado_Veranda_Umidita"],
+      impostata: "Tado_Veranda_Impostata",
+      riscalda: "Tado_Veranda_Riscaldamento",
       area: { x: 842, y: 178, w: 236, h: 512 } },
     // la "terrazza" del progetto: scoperta, c'e' il sensore esterno
     // (gli Item si chiamano ancora SwitchBotBalcone_*: il nome tiene lo storico)

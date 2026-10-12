@@ -233,10 +233,11 @@
     if (d.imp != null) righe.push(["richiesta " + gradi(d.imp), "→ " + gradi(d.imp)]);
     if (ampio && righe.length === 2 && largo(righe[0][0] + " · " + righe[1][0], fS) <= avail) righe = [[righe[0][0] + " · " + righe[1][0]]];
     righe.forEach(function (r) {
-      var t = largo(r[0], fS) <= avail ? r[0] : r[r.length - 1];
       if ((y - b.y) / k + fS + 12 > hpx) return;
       y += (fS + 10) * k;
-      testo(g, t, x, y, fS, k, "room-sub");
+      var e = testo(g, r[0], x, y, fS, k, "room-sub");
+      // misura vera del testo: se non sta, la forma corta ("→ 19,0°", "62 %")
+      if (r.length > 1 && e.getComputedTextLength && e.getComputedTextLength() > avail * k) e.textContent = r[r.length - 1];
     });
     if (heatRiga && (y - b.y) / k + 50 <= hpx) {
       y += 40 * k;
@@ -445,6 +446,7 @@
     var now = new Date(), min1 = new Date(now - 60e3).toISOString();
     S = {
       Tado_Sala_Temperatura: "21.3 °C", Tado_Sala_Umidita: "56 %", Tado_Sala_Impostata: "21.0 °C", Tado_Sala_Riscaldamento: "1",
+      Tado_Veranda_Temperatura: "18.6 °C", Tado_Veranda_Umidita: "62 %", Tado_Veranda_Impostata: "19.0 °C", Tado_Veranda_Riscaldamento: "1",
       SonoffSala_Temperatura: "21.8 °C", SonoffSala_Umidita: "58 %", SonoffSala_Online: "ON",
       SwitchBotCucina_Temperatura: "22.4 °C", SwitchBotCucina_Umidita: "61 %", SwitchBotCucina_Batteria: "15 %",
       SwitchBotCucina_UltimoAnnuncio: min1,
