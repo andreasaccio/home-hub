@@ -263,6 +263,11 @@
       var v = num(n.item); if (v == null) return;
       testo(g, n.testo, n.x, n.y, 20, k, "room-sub");
       testo(g, gradi(v), n.x, n.y + 40 * k, 34, k, "room-name");
+      var u = n.umidita ? num(n.umidita) : null;
+      if (u != null) {
+        var e = testo(g, "umidità " + nf0.format(u) + " %", n.x, n.y + 72 * k, 20, k, "room-sub");
+        if (n.larghezza && e.getComputedTextLength && e.getComputedTextLength() > n.larghezza) e.textContent = nf0.format(u) + " %";
+      }
     });
   }
 

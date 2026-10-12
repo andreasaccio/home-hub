@@ -15,6 +15,7 @@ window.TV_CONFIG = {
   //   area:      rettangolo sulla pianta { x, y, w, h } in unita' della pianta, oppure
   //              { rettangoli: [...], testo: {...} } per una stanza a L
   //   note:      letture di altri sensori scritte in un punto della stanza
+  //              (temperatura e, se c'e', umidita'; larghezza in unita' della pianta)
   // Pianta ricavata dal progetto (foto del 10/10/2026), girata di 90 gradi per
   // stare nello schermo: il nord e' a sinistra, l'est in alto. La fascia a destra
   // e' la veranda (sul progetto "tettoia", chiusa e riscaldata) e il terrazzo
@@ -39,7 +40,8 @@ window.TV_CONFIG = {
       area: { rettangoli: [{ x: 514, y: 427, w: 298, h: 283 },     // soggiorno
                            { x: 362, y: 532, w: 160, h: 221 }],    // angolo cottura
               testo: { x: 514, y: 427, w: 298, h: 283 } },
-      note: [{ testo: "Cucina", item: "SwitchBotCucina_Temperatura", x: 376, y: 572 }] },
+      note: [{ testo: "Cucina", item: "SwitchBotCucina_Temperatura", umidita: "SwitchBotCucina_Umidita",
+               x: 376, y: 572, larghezza: 158 }] },
     { id: "luca", nome: "Camera di Luca",
       temperatura: [], umidita: [],
       area: { x: 18, y: 543, w: 328, h: 167 } },
