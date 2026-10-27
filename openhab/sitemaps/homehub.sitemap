@@ -22,6 +22,9 @@ sitemap homehub label="Home Hub" {
                 Text item=SonoffSala_Temperatura
                 Text item=SwitchBotCucina_Temperatura
                 Text item=Tado_Veranda_Temperatura
+                Text item=Tado_Camera_Temperatura
+                Text item=Tado_Luca_Temperatura
+                Text item=Tado_Bagno_Temperatura
             }
             Frame label="Umidità" {
                 Text item=SwitchBotBalcone_Umidita
@@ -29,6 +32,9 @@ sitemap homehub label="Home Hub" {
                 Text item=SonoffSala_Umidita
                 Text item=SwitchBotCucina_Umidita
                 Text item=Tado_Veranda_Umidita
+                Text item=Tado_Camera_Umidita
+                Text item=Tado_Luca_Umidita
+                Text item=Tado_Bagno_Umidita
             }
             Frame label="Ultime 24 ore" {
                 Chart item=gGrafTemperatureCasa period=D refresh=300000 service="rrd4j"
@@ -51,6 +57,30 @@ sitemap homehub label="Home Hub" {
                 Text item=Tado_Veranda_Impostata
                 Text item=Tado_Veranda_Riscaldamento
                 Text item=Tado_Veranda_Modo
+            }
+            Frame label="tado (sala, testina)" {
+                Text item=Tado_SalaTestina_Temperatura
+                Text item=Tado_SalaTestina_Impostata
+                Text item=Tado_SalaTestina_Riscaldamento
+                Text item=Tado_SalaTestina_Modo
+            }
+            Frame label="tado (camera)" {
+                Text item=Tado_Camera_Temperatura
+                Text item=Tado_Camera_Impostata
+                Text item=Tado_Camera_Riscaldamento
+                Text item=Tado_Camera_Modo
+            }
+            Frame label="tado (camera di Luca)" {
+                Text item=Tado_Luca_Temperatura
+                Text item=Tado_Luca_Impostata
+                Text item=Tado_Luca_Riscaldamento
+                Text item=Tado_Luca_Modo
+            }
+            Frame label="tado (bagno)" {
+                Text item=Tado_Bagno_Temperatura
+                Text item=Tado_Bagno_Impostata
+                Text item=Tado_Bagno_Riscaldamento
+                Text item=Tado_Bagno_Modo
             }
             Frame label="Caldaia (Shelly)" {
                 Text item=Caldaia_RichiestaTado

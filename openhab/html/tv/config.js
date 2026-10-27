@@ -8,7 +8,7 @@ window.TV_CONFIG = {
 
   // Stanze della mappa. Per ogni misura si usa il primo Item con un valore:
   // quando arrivano le testine tado basta metterle in testa all'elenco.
-  //   riscalda:  Item che vale 1 (o ON) quando la stanza chiede calore
+  //   riscalda:  Item (o elenco di Item) che vale 1 (o ON) quando la stanza chiede calore
   //   impostata: temperatura richiesta (tado)
   //   esterno:   terrazzo e simili (solo contorno, niente riscaldamento)
   //   transito:  ingresso, disimpegno: solo il nome
@@ -22,10 +22,16 @@ window.TV_CONFIG = {
   // scoperto, piu' piccolo, lato bagno a est. 1 unita' = circa 1,2 cm.
   stanze: [
     { id: "camera", nome: "Camera",
-      temperatura: [], umidita: [],
+      temperatura: ["Tado_Camera_Temperatura"],
+      umidita: ["Tado_Camera_Umidita"],
+      impostata: "Tado_Camera_Impostata",
+      riscalda: "Tado_Camera_Riscaldamento",
       area: { x: 377, y: 42, w: 298, h: 278 } },
     { id: "bagno", nome: "Bagno",
-      temperatura: [], umidita: [],
+      temperatura: ["Tado_Bagno_Temperatura"],
+      umidita: ["Tado_Bagno_Umidita"],
+      impostata: "Tado_Bagno_Impostata",
+      riscalda: "Tado_Bagno_Riscaldamento",
       area: { x: 687, y: 42, w: 125, h: 375 } },
     { id: "disimpegno", nome: "Disimpegno", transito: true,
       area: { x: 375, y: 330, w: 307, h: 87 } },
@@ -36,14 +42,18 @@ window.TV_CONFIG = {
       temperatura: ["Tado_Sala_Temperatura", "SonoffSala_Temperatura", "SwitchBotCucina_Temperatura"],
       umidita: ["Tado_Sala_Umidita", "SonoffSala_Umidita", "SwitchBotCucina_Umidita"],
       impostata: "Tado_Sala_Impostata",
-      riscalda: "Tado_Sala_Riscaldamento",
+      // termostato a muro (:2) o testina sul termosifone (:7): basta uno dei due
+      riscalda: ["Tado_Sala_Riscaldamento", "Tado_SalaTestina_Riscaldamento"],
       area: { rettangoli: [{ x: 514, y: 427, w: 298, h: 283 },     // soggiorno
                            { x: 362, y: 532, w: 160, h: 221 }],    // angolo cottura
               testo: { x: 514, y: 427, w: 298, h: 283 } },
       note: [{ testo: "Cucina", item: "SwitchBotCucina_Temperatura", umidita: "SwitchBotCucina_Umidita",
                x: 376, y: 572, larghezza: 158 }] },
     { id: "luca", nome: "Camera di Luca",
-      temperatura: [], umidita: [],
+      temperatura: ["Tado_Luca_Temperatura"],
+      umidita: ["Tado_Luca_Umidita"],
+      impostata: "Tado_Luca_Impostata",
+      riscalda: "Tado_Luca_Riscaldamento",
       area: { x: 18, y: 543, w: 328, h: 167 } },
     // la "tettoia" del progetto, chiusa e riscaldata: testina tado dal 12/10/2026
     { id: "veranda", nome: "Veranda",

@@ -188,7 +188,7 @@
       t: primo(st.temperatura),
       u: primo(st.umidita),
       imp: st.impostata ? num(st.impostata) : null,
-      heat: st.riscalda ? on(st.riscalda) : false,
+      heat: [].concat(st.riscalda || []).some(on),
       haRisc: !!st.riscalda
     };
   }
@@ -246,6 +246,8 @@
       y += 40 * k;
       fiamma(g, x, y - 23 * k, 28, k);
       testo(g, "riscalda", x + 34 * k, y, 22, k, "room-heat");
+    } else if (heatRiga) {   // stanza bassa (Camera di Luca): fiamma accanto al nome
+      fiamma(g, x + (largo(st.nome, fN) + 10) * k, b.y + (pad + fN - 23) * k, 28, k);
     }
   }
 
@@ -465,6 +467,9 @@
     var now = new Date(), min1 = new Date(now - 60e3).toISOString();
     S = {
       Tado_Sala_Temperatura: "21.3 °C", Tado_Sala_Umidita: "56 %", Tado_Sala_Impostata: "21.0 °C", Tado_Sala_Riscaldamento: "1",
+      Tado_Camera_Temperatura: "19.4 °C", Tado_Camera_Umidita: "55 %", Tado_Camera_Impostata: "19.0 °C", Tado_Camera_Riscaldamento: "0",
+      Tado_Luca_Temperatura: "20.6 °C", Tado_Luca_Umidita: "52 %", Tado_Luca_Impostata: "21.0 °C", Tado_Luca_Riscaldamento: "1",
+      Tado_Bagno_Temperatura: "22.8 °C", Tado_Bagno_Umidita: "68 %", Tado_Bagno_Impostata: "22.0 °C", Tado_Bagno_Riscaldamento: "0",
       Tado_Veranda_Temperatura: "18.6 °C", Tado_Veranda_Umidita: "62 %", Tado_Veranda_Impostata: "19.0 °C", Tado_Veranda_Riscaldamento: "1",
       SonoffSala_Temperatura: "21.8 °C", SonoffSala_Umidita: "58 %", SonoffSala_Online: "ON",
       SwitchBotCucina_Temperatura: "22.4 °C", SwitchBotCucina_Umidita: "61 %", SwitchBotCucina_Batteria: "15 %",

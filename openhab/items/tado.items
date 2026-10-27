@@ -4,6 +4,9 @@
 //   bridge     homekit:bridge:9a7bc8b8506a              "tado Internet Bridge" (.8)
 //   termostato homekit:bridged-accessory:9a7bc8b8506a:2 "Tado Termostato Sala"
 //   testina    homekit:bridged-accessory:9a7bc8b8506a:3 "Tado Veranda" (dal 12/10/2026)
+//   testine aggiunte il 27/10/2026 (nel bridge hanno solo il numero di serie):
+//     :4 VA1142240000 Camera, :5 VA3216971008 Camera di Luca,
+//     :6 VA3004576512 Bagno,  :7 VA2803249920 Sala (termosifone; il termostato a muro e' :2)
 // Le chiavi di abbinamento stanno in HomekitKeyStore (jsondb).
 // I numeri in coda ai canali (-12, -13...) sono gli identificativi HomeKit delle
 // caratteristiche: se il bridge viene riabbinato o sostituito vanno ricontrollati.
@@ -29,3 +32,31 @@ Number:Temperature   Tado_Veranda_Impostata     "Veranda - temperatura impostata
 Number:Dimensionless Tado_Veranda_Umidita       "Veranda - umidità (tado) [%.0f %%]"               <humidity>    (gTado, gStorico, gGrafUmiditaCasa) { channel="homekit:bridged-accessory:9a7bc8b8506a:3:thermostat#relative-humidity-current-17", unit="%" }
 String               Tado_Veranda_Riscaldamento "Veranda - riscaldamento ora (tado) [%s]"          <fire>        (gTado)           { channel="homekit:bridged-accessory:9a7bc8b8506a:3:thermostat#heating-cooling-current-12", stateDescription=""[options="0=Spento,1=Riscalda,2=Raffredda", readOnly=true] }
 String               Tado_Veranda_Modo          "Veranda - modo (tado) [%s]"                       <heating>     (gTado)           { channel="homekit:bridged-accessory:9a7bc8b8506a:3:thermostat#heating-cooling-target-13", stateDescription=""[options="0=Spento,1=Riscaldamento,2=Raffrescamento,3=Automatico", readOnly=true] }
+
+// --- Camera (testina :4, 27/10/2026) ------------------------------------------
+Number:Temperature   Tado_Camera_Temperatura   "Camera - temperatura (tado) [%.1f °C]"           <temperature> (gTado, gStorico) { channel="homekit:bridged-accessory:9a7bc8b8506a:4:thermostat#temperature-current-14", unit="°C" }
+Number:Temperature   Tado_Camera_Impostata     "Camera - temperatura impostata (tado) [%.1f °C]" <heating>     (gTado, gStorico) { channel="homekit:bridged-accessory:9a7bc8b8506a:4:thermostat#temperature-target-15", unit="°C", stateDescription=""[pattern="%.1f °C", readOnly=true] }
+Number:Dimensionless Tado_Camera_Umidita       "Camera - umidità (tado) [%.0f %%]"               <humidity>    (gTado, gStorico) { channel="homekit:bridged-accessory:9a7bc8b8506a:4:thermostat#relative-humidity-current-17", unit="%" }
+String               Tado_Camera_Riscaldamento "Camera - riscaldamento ora (tado) [%s]"          <fire>        (gTado)           { channel="homekit:bridged-accessory:9a7bc8b8506a:4:thermostat#heating-cooling-current-12", stateDescription=""[options="0=Spento,1=Riscalda,2=Raffredda", readOnly=true] }
+String               Tado_Camera_Modo          "Camera - modo (tado) [%s]"                       <heating>     (gTado)           { channel="homekit:bridged-accessory:9a7bc8b8506a:4:thermostat#heating-cooling-target-13", stateDescription=""[options="0=Spento,1=Riscaldamento,2=Raffrescamento,3=Automatico", readOnly=true] }
+
+// --- Camera di Luca (testina :5, 27/10/2026) ------------------------------------------
+Number:Temperature   Tado_Luca_Temperatura   "Camera di Luca - temperatura (tado) [%.1f °C]"           <temperature> (gTado, gStorico) { channel="homekit:bridged-accessory:9a7bc8b8506a:5:thermostat#temperature-current-14", unit="°C" }
+Number:Temperature   Tado_Luca_Impostata     "Camera di Luca - temperatura impostata (tado) [%.1f °C]" <heating>     (gTado, gStorico) { channel="homekit:bridged-accessory:9a7bc8b8506a:5:thermostat#temperature-target-15", unit="°C", stateDescription=""[pattern="%.1f °C", readOnly=true] }
+Number:Dimensionless Tado_Luca_Umidita       "Camera di Luca - umidità (tado) [%.0f %%]"               <humidity>    (gTado, gStorico) { channel="homekit:bridged-accessory:9a7bc8b8506a:5:thermostat#relative-humidity-current-17", unit="%" }
+String               Tado_Luca_Riscaldamento "Camera di Luca - riscaldamento ora (tado) [%s]"          <fire>        (gTado)           { channel="homekit:bridged-accessory:9a7bc8b8506a:5:thermostat#heating-cooling-current-12", stateDescription=""[options="0=Spento,1=Riscalda,2=Raffredda", readOnly=true] }
+String               Tado_Luca_Modo          "Camera di Luca - modo (tado) [%s]"                       <heating>     (gTado)           { channel="homekit:bridged-accessory:9a7bc8b8506a:5:thermostat#heating-cooling-target-13", stateDescription=""[options="0=Spento,1=Riscaldamento,2=Raffrescamento,3=Automatico", readOnly=true] }
+
+// --- Bagno (testina :6, 27/10/2026) ------------------------------------------
+Number:Temperature   Tado_Bagno_Temperatura   "Bagno - temperatura (tado) [%.1f °C]"           <temperature> (gTado, gStorico) { channel="homekit:bridged-accessory:9a7bc8b8506a:6:thermostat#temperature-current-14", unit="°C" }
+Number:Temperature   Tado_Bagno_Impostata     "Bagno - temperatura impostata (tado) [%.1f °C]" <heating>     (gTado, gStorico) { channel="homekit:bridged-accessory:9a7bc8b8506a:6:thermostat#temperature-target-15", unit="°C", stateDescription=""[pattern="%.1f °C", readOnly=true] }
+Number:Dimensionless Tado_Bagno_Umidita       "Bagno - umidità (tado) [%.0f %%]"               <humidity>    (gTado, gStorico) { channel="homekit:bridged-accessory:9a7bc8b8506a:6:thermostat#relative-humidity-current-17", unit="%" }
+String               Tado_Bagno_Riscaldamento "Bagno - riscaldamento ora (tado) [%s]"          <fire>        (gTado)           { channel="homekit:bridged-accessory:9a7bc8b8506a:6:thermostat#heating-cooling-current-12", stateDescription=""[options="0=Spento,1=Riscalda,2=Raffredda", readOnly=true] }
+String               Tado_Bagno_Modo          "Bagno - modo (tado) [%s]"                       <heating>     (gTado)           { channel="homekit:bridged-accessory:9a7bc8b8506a:6:thermostat#heating-cooling-target-13", stateDescription=""[options="0=Spento,1=Riscaldamento,2=Raffrescamento,3=Automatico", readOnly=true] }
+
+// --- Sala, testina sul termosifone (testina :7, 27/10/2026) ------------------------------------------
+Number:Temperature   Tado_SalaTestina_Temperatura   "Sala, testina - temperatura (tado) [%.1f °C]"           <temperature> (gTado, gStorico) { channel="homekit:bridged-accessory:9a7bc8b8506a:7:thermostat#temperature-current-14", unit="°C" }
+Number:Temperature   Tado_SalaTestina_Impostata     "Sala, testina - temperatura impostata (tado) [%.1f °C]" <heating>     (gTado, gStorico) { channel="homekit:bridged-accessory:9a7bc8b8506a:7:thermostat#temperature-target-15", unit="°C", stateDescription=""[pattern="%.1f °C", readOnly=true] }
+Number:Dimensionless Tado_SalaTestina_Umidita       "Sala, testina - umidità (tado) [%.0f %%]"               <humidity>    (gTado, gStorico) { channel="homekit:bridged-accessory:9a7bc8b8506a:7:thermostat#relative-humidity-current-17", unit="%" }
+String               Tado_SalaTestina_Riscaldamento "Sala, testina - riscaldamento ora (tado) [%s]"          <fire>        (gTado)           { channel="homekit:bridged-accessory:9a7bc8b8506a:7:thermostat#heating-cooling-current-12", stateDescription=""[options="0=Spento,1=Riscalda,2=Raffredda", readOnly=true] }
+String               Tado_SalaTestina_Modo          "Sala, testina - modo (tado) [%s]"                       <heating>     (gTado)           { channel="homekit:bridged-accessory:9a7bc8b8506a:7:thermostat#heating-cooling-target-13", stateDescription=""[options="0=Spento,1=Riscaldamento,2=Raffrescamento,3=Automatico", readOnly=true] }
