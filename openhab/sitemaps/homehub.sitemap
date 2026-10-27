@@ -7,8 +7,8 @@ sitemap homehub label="Home Hub" {
 
     Frame label="Adesso" {
         Text item=SwitchBotBalcone_Temperatura label="Fuori (balcone) [%.1f °C]"
-        Text item=Tado_Sala_Temperatura        label="Sala [%.1f °C]"
-        Text item=Tado_Sala_Riscaldamento      label="Riscaldamento sala [%s]"
+        Text item=Tado_SalaTestina_Temperatura label="Sala [%.1f °C]"
+        Text item=Tado_SalaTestina_Riscaldamento label="Riscaldamento sala [%s]"
         Text item=Rete_Potenza                 label="Consumo casa [%.0f W]"
         Text item=Camper_Batt2_Livello         label="Camper - batteria 2 [%.0f %%]"
         Text item=Camper_Temperatura           label="Camper - abitacolo [%.1f °C]"
@@ -18,8 +18,9 @@ sitemap homehub label="Home Hub" {
         Text label="Temperature e umidità" icon="temperature" {
             Frame label="Temperature" {
                 Text item=SwitchBotBalcone_Temperatura
-                Text item=Tado_Sala_Temperatura
+                Text item=Tado_SalaTestina_Temperatura
                 Text item=SonoffSala_Temperatura
+                Text item=Tado_Sala_Temperatura
                 Text item=SwitchBotCucina_Temperatura
                 Text item=Tado_Veranda_Temperatura
                 Text item=Tado_Camera_Temperatura
@@ -28,8 +29,9 @@ sitemap homehub label="Home Hub" {
             }
             Frame label="Umidità" {
                 Text item=SwitchBotBalcone_Umidita
-                Text item=Tado_Sala_Umidita
+                Text item=Tado_SalaTestina_Umidita
                 Text item=SonoffSala_Umidita
+                Text item=Tado_Sala_Umidita
                 Text item=SwitchBotCucina_Umidita
                 Text item=Tado_Veranda_Umidita
                 Text item=Tado_Camera_Umidita
@@ -46,7 +48,7 @@ sitemap homehub label="Home Hub" {
         }
 
         Text label="Riscaldamento" icon="heating" {
-            Frame label="tado (sala)" {
+            Frame label="tado (termostato a muro)" {
                 Text item=Tado_Sala_Temperatura
                 Text item=Tado_Sala_Impostata
                 Text item=Tado_Sala_Riscaldamento
@@ -58,7 +60,7 @@ sitemap homehub label="Home Hub" {
                 Text item=Tado_Veranda_Riscaldamento
                 Text item=Tado_Veranda_Modo
             }
-            Frame label="tado (sala, testina)" {
+            Frame label="tado (sala)" {
                 Text item=Tado_SalaTestina_Temperatura
                 Text item=Tado_SalaTestina_Impostata
                 Text item=Tado_SalaTestina_Riscaldamento

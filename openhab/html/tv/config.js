@@ -8,7 +8,7 @@ window.TV_CONFIG = {
 
   // Stanze della mappa. Per ogni misura si usa il primo Item con un valore:
   // quando arrivano le testine tado basta metterle in testa all'elenco.
-  //   riscalda:  Item (o elenco di Item) che vale 1 (o ON) quando la stanza chiede calore
+  //   riscalda:  Item (o elenco di Item, basta uno) che vale 1 (o ON) quando la stanza chiede calore
   //   impostata: temperatura richiesta (tado)
   //   esterno:   terrazzo e simili (solo contorno, niente riscaldamento)
   //   transito:  ingresso, disimpegno: solo il nome
@@ -39,11 +39,12 @@ window.TV_CONFIG = {
       area: { x: 240, y: 427, w: 266, h: 95 } },
     // sala e angolo cottura: un solo ambiente, un termosifone con testina tado
     { id: "sala", nome: "Sala",
-      temperatura: ["Tado_Sala_Temperatura", "SonoffSala_Temperatura", "SwitchBotCucina_Temperatura"],
-      umidita: ["Tado_Sala_Umidita", "SonoffSala_Umidita", "SwitchBotCucina_Umidita"],
-      impostata: "Tado_Sala_Impostata",
-      // termostato a muro (:2) o testina sul termosifone (:7): basta uno dei due
-      riscalda: ["Tado_Sala_Riscaldamento", "Tado_SalaTestina_Riscaldamento"],
+      // la stanza la governa la testina (:7), come le altre; il termostato a muro (:2)
+      // comanda la caldaia per tutte le zone: resta solo come riserva per la temperatura
+      temperatura: ["Tado_SalaTestina_Temperatura", "Tado_Sala_Temperatura", "SonoffSala_Temperatura"],
+      umidita: ["Tado_SalaTestina_Umidita", "Tado_Sala_Umidita", "SonoffSala_Umidita"],
+      impostata: "Tado_SalaTestina_Impostata",
+      riscalda: "Tado_SalaTestina_Riscaldamento",
       area: { rettangoli: [{ x: 514, y: 427, w: 298, h: 283 },     // soggiorno
                            { x: 362, y: 532, w: 160, h: 221 }],    // angolo cottura
               testo: { x: 514, y: 427, w: 298, h: 283 } },

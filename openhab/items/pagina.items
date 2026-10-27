@@ -5,7 +5,7 @@
 
 Group gGrafTemperatureCasa   "Temperature in casa e fuori"
 Group gGrafUmiditaCasa       "Umidità in casa e fuori"
-Group gGrafRiscaldamento     "Sala: misurata e impostata (tado)"
+Group gGrafRiscaldamento     "Sala: misurata e impostata (testina tado)"
 Group gGrafCamperTensioni    "Camper: tensione batterie"
 Group gGrafCamperLivelli     "Camper: carica batterie"
 Group gGrafCamperTemperature "Camper: abitacolo e frigo"
